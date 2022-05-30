@@ -6,5 +6,6 @@ router.get("/poke", API.searchPoke);
 router.get("/item", API.searchItem);
 router.get("/move", API.searchMove);
 router.get("/:id", API.searchPokeById)
+router.post("/num", API.searchPokeByNum)
 
 module.exports = router;

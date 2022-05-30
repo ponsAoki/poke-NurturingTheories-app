@@ -1,6 +1,7 @@
 const Post = require("../models/posts")
-const fs = require("fs")
+const fs = require("fs");
 const MongoClient = require('mongodb').MongoClient
+
 
 
 module.exports = class API {
@@ -135,33 +136,57 @@ module.exports = class API {
         }
         //search pokemon by ID
     static async searchPokeById(req, res) {
-        // const id = '6286281c4ce508653ab41c0e'
-        const id = req.params.id
-        try {
-            const Data = await Post.findById(id)
-                // console.log(Data);
+            // const id = '6286281c4ce508653ab41c0e'
+            const id = req.params.id
+            try {
+                const Data = await Post.findById(id)
+                    // console.log(Data);
 
-            //データベース接続
-            MongoClient.connect('mongodb://localhost:27017', {
-                useNewUrlParser: true
-            }, (err, db) => {
-                if (err) throw err;
-                console.log("データベース接続に成功しました")
-                const dbName = db.db("ポケモンDB")
-                const collection = dbName.collection('poke_data8')
-                    //検索
-                collection.findOne({ 'no': Data.no }, function(err, results) {
-                    if (err) {
-                        throw error
-                    } else {
-                        // console.log(results);
-                        res.send(results);
-                    }
-                    db.close()
+                //データベース接続
+                MongoClient.connect('mongodb://localhost:27017', {
+                    useNewUrlParser: true
+                }, (err, db) => {
+                    if (err) throw err;
+                    console.log("データベース接続に成功しました")
+                    const dbName = db.db("ポケモンDB")
+                    const collection = dbName.collection('poke_data8')
+                        //検索
+                    collection.findOne({ 'no': Data.no }, function(err, results) {
+                        if (err) {
+                            throw error
+                        } else {
+                            // console.log(results);
+                            res.send(results);
+                        }
+                        db.close()
+                    })
                 })
-            })
-        } catch (error) {
-            res.status(400).json({ message: error.message })
+            } catch (error) {
+                res.status(400).json({ message: error.message })
+            }
         }
+        //serach pokemon by number
+    static async searchPokeByNum(req, res) {
+        const Pokemon = req.body
+        console.log(Pokemon.no);
+
+        await MongoClient.connect('mongodb://localhost:27017', {
+            useNewUrlParser: true
+        }, (err, db) => {
+            if (err) throw err;
+            console.log("データベース接続に成功しました");
+            const dbName = db.db('ポケモンDB')
+            const collection = dbName.collection('poke_data8')
+                //検索
+            collection.find({ 'no': Pokemon.no }).toArray((err, results) => {
+                if (err) {
+                    throw error
+                } else {
+                    console.log(results);
+                    res.send(results)
+                    db.close()
+                }
+            })
+        })
     }
 }
