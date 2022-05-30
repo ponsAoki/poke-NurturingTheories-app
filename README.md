@@ -3,6 +3,6 @@
 
 ## Requirement
 
-node: 16.13.2, 
-@vue/cli: 5.0.1, 
-vuetify: 2.6.0, 
+node: 16.13.2,  
+@vue/cli: 5.0.1,  
+vuetify: 2.6.0
