@@ -478,12 +478,25 @@ export default {
         })
         .then((result) => {
           console.log(result);
-          const res = result.varieties[i].pokemon;
-          const pokeApiResult = res.filter((item) => {
-            return item.name.indexOf("-mega");
-          });
-          console.log(pokeApiResult);
-          console.log("megaデータ", pokeApiResult);
+          const num = this.Pokemon.no;
+          const vari = result.varieties[i];
+          const res = vari.pokemon;
+          if (res.name.indexOf("-mega")) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "m";
+          } else if (
+            vari.is_default == false &&
+            !res.name.indexOf("mega") &&
+            !res.name.indexOf("gmax")
+          ) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "f";
+          }
+          // const pokeApiResult = res.filter((item) => {
+          //   return item.name.indexOf("-mega");
+          // });
+          // console.log(pokeApiResult);
+          // console.log("megaデータ", pokeApiResult);
         });
       // const pokeApiResult = (await fetch(url)).json;
       // console.log(pokeApiResult);
