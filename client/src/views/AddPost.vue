@@ -34,12 +34,12 @@
             <div v-if="tetsuLink">
               <a
                 v-bind:href="tetsuLinkVal"
-                alt="ポケモン徹底攻略さんの育成論を参照"
+                alt="ポケモン徹底攻略様の育成論を参照"
                 target="_blank"
                 rel="noopener noreferrer"
                 >このポケモンの他の育成論</a
               >
-              <p>引用: 「ポケモン徹底攻略」さん</p>
+              <p>参照元: 「ポケモン徹底攻略」様</p>
             </div>
             <v-row>
               <v-col cols="5" sm="5" class="mt-3">
@@ -481,14 +481,18 @@ export default {
           const num = this.Pokemon.no;
           const vari = result.varieties[i];
           const res = vari.pokemon;
-          if (res.name.indexOf("-mega")) {
+          if (vari.is_default == true) {
+            this.tetsuLinkVal = "https://yakkun.com/swsh/theory/p" + `${num}`;
+          } else if (res.name.match("-mega")) {
             this.tetsuLinkVal =
               "https://yakkun.com/swsh/theory/p" + `${num}` + "m";
-          } else if (
-            vari.is_default == false &&
-            !res.name.indexOf("mega") &&
-            !res.name.indexOf("gmax")
-          ) {
+          } else if (res.name.match("-alola")) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "a";
+          } else if (res.name.match("-galar")) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "g";
+          } else if (res.name.match("-")) {
             this.tetsuLinkVal =
               "https://yakkun.com/swsh/theory/p" + `${num}` + "f";
           }
