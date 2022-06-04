@@ -79,7 +79,8 @@
                 <v-select
                   label="特性"
                   v-model="post.ability"
-                  :items="abilities"
+                  :items="Pokemon.abilities"
+                  :item-value="post.ability"
                 ></v-select>
               </v-col>
               <v-col>
@@ -408,7 +409,7 @@ export default {
       url: `https://pokeapi.co/api/v2/`,
       images: [],
       lvs: [50, 100],
-      abillities: [],
+      abilities: [],
       loading: false,
       Items: [],
       natures: [
@@ -449,6 +450,7 @@ export default {
     this.Moves = await API.getMove();
     this.Pokemon = await API.getPokeById(this.$route.params.id);
     this.natureInArray();
+    this.post.ability = this.Pokemon.abilities[0];
 
     // await axios.get(`${URL}/poke`, {
     //   params: {
@@ -695,9 +697,9 @@ export default {
   },
 
   watch: {
-    Pokemon() {
-      this.onInput();
-    },
+    // Pokemon() {
+    //   this.onInput();
+    // },
     level() {
       this.nhCal();
       this.nOCal();
