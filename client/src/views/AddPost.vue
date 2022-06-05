@@ -333,46 +333,52 @@
                 </tbody>
               </v-simple-table>
             </v-col>
-            <v-col cols="12" sm="6">
-              <v-autocomplete
-                v-model="post.moves[0]"
-                :items="Moves"
-                :item-text="(item) => item.jname"
-                return-object
-                label="技1"
-              >
-              </v-autocomplete>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-autocomplete
-                v-model="post.moves[1]"
-                :items="Moves"
-                :item-text="(item) => item.jname"
-                return-object
-                label="技2"
-              >
-              </v-autocomplete>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-autocomplete
-                v-model="post.moves[2]"
-                :items="Moves"
-                :item-text="(item) => item.jname"
-                return-object
-                label="技3"
-              >
-              </v-autocomplete>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-autocomplete
-                v-model="post.moves[3]"
-                :items="Moves"
-                :item-text="(item) => item.jname"
-                return-object
-                label="技4"
-              >
-              </v-autocomplete>
-            </v-col>
+            <br />
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  v-model="post.moves[0]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技1"
+                >
+                </v-autocomplete>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  v-model="post.moves[1]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技2"
+                >
+                </v-autocomplete>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  v-model="post.moves[2]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技3"
+                >
+                </v-autocomplete>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  v-model="post.moves[3]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技4"
+                >
+                </v-autocomplete>
+              </v-col>
+            </v-row>
+            <br />
             <br />
             <v-col>
               <v-textarea
@@ -404,6 +410,7 @@ export default {
       tetsuLinkVal: "",
       level: 50,
       post: {
+        simPokesId: 0,
         nn: "",
         sex_i: 0,
         c_switch: "",
@@ -521,6 +528,7 @@ export default {
               // console.log(response);
               if (response[i]._id == Pokemon._id) {
                 this.tetsuLinkOn(i);
+                this.post.simPokesId = i;
                 fetch(pokemon.varieties[i].pokemon.url)
                   .then((res) => {
                     return res.json();
@@ -528,6 +536,7 @@ export default {
                   .then((formI) => {
                     // console.log(formI);
                     this.imgJadge(formI);
+                    return this.simPokesId;
                   });
               }
             });
@@ -638,6 +647,7 @@ export default {
       for (var key in this.Pokemon) {
         formData.append("pokemon", this.Pokemon[key]);
       }
+      formData.append("simId", this.post.simPokesId);
       formData.append("no", this.Pokemon.no);
       formData.append("lv", this.level);
       formData.append("nn", this.post.nn);

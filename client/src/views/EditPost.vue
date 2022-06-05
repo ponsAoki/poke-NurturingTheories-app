@@ -32,6 +32,16 @@
                 ></v-select>
               </v-col>
             </v-row>
+            <div v-if="tetsuLink">
+              <a
+                v-bind:href="tetsuLinkVal"
+                alt="ポケモン徹底攻略様の育成論を参照"
+                target="_blank"
+                rel="noopener noreferrer"
+                >このポケモンの他の育成論</a
+              >
+              <p>参照元: 「ポケモン徹底攻略」様</p>
+            </div>
             <v-row>
               <v-col cols="5" sm="5" class="mt-3">
                 <v-text-field
@@ -326,42 +336,55 @@
                 </tbody>
               </v-simple-table>
             </v-col>
-            <v-autocomplete
-              class="font-medium shadow"
-              v-model="post.moves[0]"
-              :items="Moves"
-              :item-text="(item) => item.jname"
-              return-object
-              label="技1"
-            >
-            </v-autocomplete>
-            <v-autocomplete
-              class="font-medium shadow relative"
-              v-model="post.moves[1]"
-              :items="Moves"
-              :item-text="(item) => item.jname"
-              return-object
-              label="技2"
-            >
-            </v-autocomplete>
-            <v-autocomplete
-              class="font-medium shadow relative"
-              v-model="post.moves[2]"
-              :items="Moves"
-              :item-text="(item) => item.jname"
-              return-object
-              label="技3"
-            >
-            </v-autocomplete>
-            <v-autocomplete
-              class="font-medium shadow relative"
-              v-model="post.moves[3]"
-              :items="Moves"
-              :item-text="(item) => item.jname"
-              return-object
-              label="技4"
-            >
-            </v-autocomplete>
+            <br />
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  class="font-medium shadow"
+                  v-model="post.moves[0]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技1"
+                >
+                </v-autocomplete>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  class="font-medium shadow relative"
+                  v-model="post.moves[1]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技2"
+                >
+                </v-autocomplete>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  class="font-medium shadow relative"
+                  v-model="post.moves[2]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技3"
+                >
+                </v-autocomplete>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  class="font-medium shadow relative"
+                  v-model="post.moves[3]"
+                  :items="Moves"
+                  :item-text="(item) => item.jname"
+                  return-object
+                  label="技4"
+                >
+                </v-autocomplete>
+              </v-col>
+            </v-row>
             <br />
             <v-col>
               <v-textarea
@@ -388,6 +411,8 @@ export default {
       // rules: [(value) => !!value || "This field is required!"],
       Pokemons: [],
       Pokemon: [], //入力データを格納
+      tetsuLink: false,
+      tetsuLinkVal: "",
       level: 50,
       post: {
         pokemon: [],
@@ -451,6 +476,7 @@ export default {
     this.Pokemon = await API.getPokeById(this.$route.params.id);
     this.natureInArray();
     this.post.ability = this.Pokemon.abilities[0];
+    this.tetsuLinkOn(this.post.simId);
 
     // await axios.get(`${URL}/poke`, {
     //   params: {
@@ -470,15 +496,45 @@ export default {
   },
 
   methods: {
-    // fuseSearch(pokemons, search) {
-    //   const fuse = new Fuse(pokemons, {
-    //     keys: ["name", "form"],
-    //     includeMatches: true,
-    //   });
-    //   return search.length
-    //     ? fuse.search(search).map(({ item }) => item)
-    //     : fuse.list;
-    // },
+    async tetsuLinkOn(i) {
+      this.tetsuLink = true;
+      const Pokemon = this.Pokemon;
+      const url = this.url + `pokemon-species/${Pokemon.no}`;
+      fetch(url)
+        .then((response) => {
+          return response.json();
+        })
+        .then((result) => {
+          console.log(result);
+          const num = this.Pokemon.no;
+          const vari = result.varieties[i];
+          const res = vari.pokemon;
+          if (vari.is_default == true) {
+            this.tetsuLinkVal = "https://yakkun.com/swsh/theory/p" + `${num}`;
+          } else if (res.name.match("-mega")) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "m";
+          } else if (res.name.match("-alola")) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "a";
+          } else if (res.name.match("-galar")) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "g";
+          } else if (res.name.match("-")) {
+            this.tetsuLinkVal =
+              "https://yakkun.com/swsh/theory/p" + `${num}` + "f";
+          }
+          // const pokeApiResult = res.filter((item) => {
+          //   return item.name.indexOf("-mega");
+          // });
+          // console.log(pokeApiResult);
+          // console.log("megaデータ", pokeApiResult);
+        });
+      // const pokeApiResult = (await fetch(url)).json;
+      // console.log(pokeApiResult);
+      // const num = this.Pokemon.no;
+      // this.tetsuLinkVal = "https://yakkun.com/swsh/theory/p" + `${num}`;
+    },
 
     imgSrc() {
       const Pokemon = this.Pokemon;

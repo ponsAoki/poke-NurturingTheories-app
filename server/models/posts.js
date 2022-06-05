@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
     pokemon: [String],
+    simId: Number,
     no: Number,
     lv: Number,
     nn: String,
