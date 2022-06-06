@@ -428,7 +428,7 @@ export default {
       url: `https://pokeapi.co/api/v2/`,
       images: [],
       lvs: [50, 100],
-      abillities: [],
+      abilities: [],
       loading: false,
       Items: [],
       natures: [
@@ -568,11 +568,17 @@ export default {
       this.tetsuLinkOn();
       this.post.c_switch = false;
       this.imgSrc();
-      this.abilities = [
-        this.Pokemon.abilities[0],
-        this.Pokemon.abilities[1],
-        this.Pokemon.hidden_abilities,
-      ];
+      for (let i = 0; i < 2; i++) {
+        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
+          this.abilities.push(this.Pokemon.abilities[i]);
+          this.abilities.push(this.Pokemon.hidden_abilities[i]);
+        }
+      }
+      // this.abilities = [
+      //   this.Pokemon.abilities[0],
+      //   this.Pokemon.abilities[1],
+      //   this.Pokemon.hidden_abilities[0],
+      // ];
       this.post.Ability = this.abilities[0];
       this.post.bn[0] = this.Pokemon.status.h;
       this.post.bn[1] = this.Pokemon.status.a;
@@ -655,6 +661,13 @@ export default {
       formData.append("sex", this.post.sex_i);
       formData.append("color", this.post.c_switch);
       formData.append("ability", this.post.Ability);
+      if (this.abilities.length > 0) {
+        this.abilities.forEach((text, index) => {
+          formData.append("abilities[" + index + "]", text);
+        });
+      } else {
+        formData.append("abilities", []);
+      }
       formData.append("nature", this.post.Nature.name);
       formData.append("item", this.post.Item.name.japanese);
       if (this.post.bn.length > 0) {

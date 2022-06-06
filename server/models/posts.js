@@ -10,6 +10,7 @@ const postSchema = mongoose.Schema({
     sex: Number,
     color: String,
     ability: String,
+    abilities: Array,
     nature: String,
     item: String,
     bn: [Number],

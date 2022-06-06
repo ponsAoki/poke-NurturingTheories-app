@@ -89,7 +89,7 @@
                 <v-select
                   label="特性"
                   v-model="post.ability"
-                  :items="Pokemon.abilities"
+                  :items="post.abilities"
                   :item-value="post.ability"
                 ></v-select>
               </v-col>
@@ -420,6 +420,7 @@ export default {
         sex_i: "",
         color: null,
         image: "",
+        abilities: [],
         ability: "",
         nature: "",
         Item: [],
@@ -434,7 +435,6 @@ export default {
       url: `https://pokeapi.co/api/v2/`,
       images: [],
       lvs: [50, 100],
-      abilities: [],
       loading: false,
       Items: [],
       natures: [
@@ -475,7 +475,7 @@ export default {
     this.Moves = await API.getMove();
     this.Pokemon = await API.getPokeById(this.$route.params.id);
     this.natureInArray();
-    this.post.ability = this.Pokemon.abilities[0];
+    // this.post.abilities = this.Pokemon.abilities;
     this.tetsuLinkOn(this.post.simId);
 
     // await axios.get(`${URL}/poke`, {
@@ -618,12 +618,12 @@ export default {
         this.imgSrc();
         this.imgSrc();
       }
-      this.abilities = [
+      this.post.abilities = [
         this.Pokemon.abilities[0],
         this.Pokemon.abilities[1],
         this.Pokemon.hidden_abilities,
       ];
-      this.post.ability = this.abilities[0];
+      this.post.ability = this.post.abilities[0];
       this.post.bn[0] = this.Pokemon.status.h;
       this.post.bn[1] = this.Pokemon.status.a;
       this.post.bn[2] = this.Pokemon.status.b;
@@ -701,6 +701,13 @@ export default {
       formData.append("sex", this.post.sex);
       formData.append("color", this.post.color);
       formData.append("ability", this.post.ability);
+      if (this.post.abilities.length > 0) {
+        this.post.abilities.forEach((text, index) => {
+          formData.append("abilities[" + index + "]", text);
+        });
+      } else {
+        formData.append("abilities", []);
+      }
       formData.append("nature", this.post.nature.name);
       if (typeof this.post.item === "string") {
         formData.append("item", this.post.item);
