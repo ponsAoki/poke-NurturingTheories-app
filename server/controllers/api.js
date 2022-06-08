@@ -40,17 +40,6 @@ module.exports = class API {
         //update a post
     static async updatePost(req, res) {
             const id = req.params.id;
-            // let new_image = '';
-            // if (req.file) {
-            //     new_image = req.file.filename;
-            //     try {
-            //         fs.unlinkSync('./uploads/' + req.body.old_image)
-            //     } catch (error) {
-            //         console.log(error);
-            //     }
-            // } else {
-            //     new_image = req.body.old_image
-            // }
             const newPost = req.body
             console.log(newPost);
             // newPost.image = new_image
