@@ -1,7 +1,7 @@
 const Post = require("../models/posts")
 const fs = require("fs");
 const MongoClient = require('mongodb').MongoClient
-
+const ObjectId = require('mongodb').ObjectId
 
 
 module.exports = class API {
@@ -151,7 +151,7 @@ module.exports = class API {
                     const dbName = db.db("ポケモンDB")
                     const collection = dbName.collection('poke_data8')
                         //検索
-                    collection.findOne({ 'no': Data.no }, function(err, results) {
+                    collection.findOne({ '_id': ObjectId(Data.pokemon[0]) }, function(err, results) {
                         if (err) {
                             throw error
                         } else {
