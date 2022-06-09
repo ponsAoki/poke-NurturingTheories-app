@@ -475,17 +475,6 @@ export default {
     this.Moves = await API.getMove();
     this.Pokemon = await API.getPokeById(this.$route.params.id);
     this.natureInArray();
-    // this.post.abilities = this.Pokemon.abilities;
-    this.tetsuLinkOn(this.post.simId);
-
-    // await axios.get(`${URL}/poke`, {
-    //   params: {
-    //     na: 3
-    //   }
-    // }).then(
-    //     (response) => ((this.Poke = response.data), console.log(response.data))
-    //   )
-    //   .catch((error) => console.log(error));
   },
 
   mounted() {
@@ -493,20 +482,24 @@ export default {
     // this.natureInArray();
     this.nhCal();
     this.nOCal();
+    console.log(this.Pokemon);
+    this.tetsuLinkOn(this.post.simId);
   },
 
   methods: {
     async tetsuLinkOn(i) {
       this.tetsuLink = true;
-      const Pokemon = this.Pokemon;
-      const url = this.url + `pokemon-species/${Pokemon.no}`;
+      // const Pokemon = this.Pokemon;
+      // console.log(Pokemon);
+      const num = this.post.no;
+      console.log(num);
+      const url = this.url + `pokemon-species/${num}`;
       fetch(url)
         .then((response) => {
           return response.json();
         })
         .then((result) => {
           console.log(result);
-          const num = this.Pokemon.no;
           const vari = result.varieties[i];
           const res = vari.pokemon;
           if (vari.is_default == true) {
@@ -524,16 +517,7 @@ export default {
             this.tetsuLinkVal =
               "https://yakkun.com/swsh/theory/p" + `${num}` + "f";
           }
-          // const pokeApiResult = res.filter((item) => {
-          //   return item.name.indexOf("-mega");
-          // });
-          // console.log(pokeApiResult);
-          // console.log("megaデータ", pokeApiResult);
         });
-      // const pokeApiResult = (await fetch(url)).json;
-      // console.log(pokeApiResult);
-      // const num = this.Pokemon.no;
-      // this.tetsuLinkVal = "https://yakkun.com/swsh/theory/p" + `${num}`;
     },
 
     imgSrc() {
