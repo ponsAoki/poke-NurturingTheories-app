@@ -478,14 +478,15 @@ export default {
     async tetsuLinkOn(i) {
       this.tetsuLink = true;
       const Pokemon = this.Pokemon;
+      const num = Pokemon.no;
+      // console.log(Pokemon);
       const url = this.url + `pokemon-species/${Pokemon.no}`;
       fetch(url)
         .then((response) => {
           return response.json();
         })
         .then((result) => {
-          console.log(result);
-          const num = this.Pokemon.no;
+          // console.log(result);
           const vari = result.varieties[i];
           const res = vari.pokemon;
           if (vari.is_default == true) {

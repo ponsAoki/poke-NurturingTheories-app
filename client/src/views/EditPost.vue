@@ -32,7 +32,7 @@
                 ></v-select>
               </v-col>
             </v-row>
-            <div v-if="tetsuLink">
+            <div v-show="tetsuLink">
               <a
                 v-bind:href="tetsuLinkVal"
                 alt="ポケモン徹底攻略様の育成論を参照"
@@ -482,24 +482,32 @@ export default {
     // this.natureInArray();
     this.nhCal();
     this.nOCal();
-    console.log(this.Pokemon);
-    this.tetsuLinkOn(this.post.simId);
+    // console.log(this.Pokemon);
+    // this.tetsuLinkOn(this.post.simId);
+    // console.log(this.post);
+    // console.log(this.post.simId);
   },
 
+  // computed() {
+  //   console.log(this.post);
+  // },
+
   methods: {
-    async tetsuLinkOn(i) {
+    tetsuLinkOn(i) {
       this.tetsuLink = true;
-      // const Pokemon = this.Pokemon;
+      const Pokemon = this.Pokemon;
       // console.log(Pokemon);
-      const num = this.post.no;
-      console.log(num);
+      // console.log(this.post);
+      const num = Pokemon.no;
+      // console.log(num);
       const url = this.url + `pokemon-species/${num}`;
       fetch(url)
         .then((response) => {
           return response.json();
         })
         .then((result) => {
-          console.log(result);
+          // console.log(result);
+          // console.log(i);
           const vari = result.varieties[i];
           const res = vari.pokemon;
           if (vari.is_default == true) {
@@ -532,6 +540,9 @@ export default {
             this.simPokeByNum(Pokemon).then((response) => {
               // console.log(response);
               if (response[i]._id == Pokemon._id) {
+                console.log(i);
+                this.tetsuLinkOn(i);
+                this.post.simId = i;
                 fetch(pokemon.varieties[i].pokemon.url)
                   .then((res) => {
                     return res.json();
@@ -539,6 +550,7 @@ export default {
                   .then((formI) => {
                     // console.log(formI);
                     this.imgJadge(formI);
+                    return this.simId;
                   });
               }
             });
@@ -596,17 +608,22 @@ export default {
     // },
 
     onInput: function () {
+      console.log(this.post.no);
+      console.log(this.Pokemon);
+      this.tetsuLinkOn();
       if (this.post.color === null) {
         this.imgSrc();
       } else {
         this.imgSrc();
         this.imgSrc();
       }
-      this.post.abilities = [
-        this.Pokemon.abilities[0],
-        this.Pokemon.abilities[1],
-        this.Pokemon.hidden_abilities,
-      ];
+      for (let i = 0; i < 2; i++) {
+        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
+          this.post.abilities.push(this.Pokemon.abilities[i]);
+          this.post.abilities.push(this.Pokemon.hidden_abilities[i]);
+        }
+      }
+
       this.post.ability = this.post.abilities[0];
       this.post.bn[0] = this.Pokemon.status.h;
       this.post.bn[1] = this.Pokemon.status.a;
@@ -744,9 +761,9 @@ export default {
   },
 
   watch: {
-    // Pokemon() {
-    //   this.onInput();
-    // },
+    Pokemon() {
+      this.imgSrc();
+    },
     level() {
       this.nhCal();
       this.nOCal();
