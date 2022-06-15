@@ -49,6 +49,15 @@
             <p>{{ post.sex }}</p>
             <p>{{ post.color }}</p>
             <p>{{ post.no }}</p>
+            <v-col sm="10" class="d-flex justify-end">
+              <v-btn
+                color="success"
+                text
+                :to="{ name: 'edit-post', params: { id: post._id } }"
+                >編集</v-btn
+              >
+              <v-btn color="red" text @click="removePost(post._id)">削除</v-btn>
+            </v-col>
           </v-card-text>
         </v-card>
       </v-col>
@@ -68,29 +77,18 @@ export default {
     };
   },
 
-  // mounted() {
-  //   axios
-  //     .get("/api/search/poke", {
-  //       params: {
-  //         name: "フシギバナ",
-  //       },
-  //     })
-  //     .then(
-  //       (response) => ((this.users = response.data), console.log(this.users))
-  //     )
-  //     .catch((error) => console.log(error));
-  // },
-
   async created() {
     this.posts = await API.getAllPost();
-    // await axios
-    //   .get("https://jsonplaceholder.typicode.com/users", {
-    //     params: {
-    //       name: "Glenna Reichert",
-    //     },
-    //   })
-    //   .then((response) => (this.users = response.data))
-    //   .catch((error) => console.log(error));
+  },
+
+  methods: {
+    async removePost(id) {
+      const response = await API.deletePost(id);
+      this.$router.push({
+        name: "home",
+        params: { message: response.message },
+      });
+    },
   },
 };
 </script>

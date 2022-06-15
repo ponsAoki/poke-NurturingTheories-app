@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-container>
     <v-row no-gutters>
       <v-col sm="10" class="pa-4 mx-auto">
@@ -19,8 +19,8 @@
               <p>
                 実数値: {{ post.rn[0] }} - {{ post.rn[1] }} - {{ post.rn[2] }} -
                 {{ post.rn[3] }} - {{ post.rn[4] }} - {{ post.rn[5] }}
-              </p>
-              <!-- <div>
+              </p> -->
+<!-- <div>
                 <v-btn class="ma-1" width="160px">{{ post.moves[0] }}</v-btn>
                 <v-btn class="ma-1" width="160px">{{ post.moves[2] }}</v-btn>
               </div>
@@ -28,8 +28,8 @@
                 <v-btn class="ma-1" width="160px">{{ post.moves[1] }}</v-btn>
                 <v-btn class="ma-1" width="160px">{{ post.moves[3] }}</v-btn>
               </div> -->
-            </v-col>
-          </v-row>
+<!-- </v-col> -->
+<!-- </v-row>
           <v-card-actions class="pb-0">
             <v-row class="mt-1 mx-1">
               <v-col sm="2">
@@ -39,8 +39,8 @@
               </v-col>
             </v-row>
           </v-card-actions>
-          <v-card-subtitle class="headline">
-            <h3>{{ post.nn }}</h3>
+          <v-card-subtitle class="headline"> -->
+<!-- <h3>{{ post.nn }}</h3>
           </v-card-subtitle>
           <v-card-text>
             <v-row>
@@ -66,14 +66,14 @@
               >編集</v-btn
             >
             <v-btn color="red" text @click="removePost(post._id)">削除</v-btn>
-          </v-col>
-        </v-card>
+          </v-col> -->
+<!-- </v-card>
       </v-col>
     </v-row>
   </v-container>
-</template>
+</template> -->
 
-<script>
+<!-- <script>
 import API from "../api";
 export default {
   data() {
@@ -86,13 +86,13 @@ export default {
     this.post = response;
   },
   methods: {
-    async removePost(id) {
-      const response = await API.deletePost(id);
-      this.$router.push({
-        name: "home",
-        params: { message: response.message },
-      });
-    },
+    // async removePost(id) {
+    //   const response = await API.deletePost(id);
+    //   this.$router.push({
+    //     name: "home",
+    //     params: { message: response.message },
+    //   });
+    // },
   },
 };
-</script>
+</script> -->
