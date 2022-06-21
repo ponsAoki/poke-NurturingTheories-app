@@ -527,7 +527,7 @@ export default {
           }
         });
     },
-
+    //画像の処理云々
     imgSrc() {
       const Pokemon = this.Pokemon;
       const url = this.url + `pokemon-species/${Pokemon.no}`;
@@ -564,10 +564,7 @@ export default {
     },
 
     imgJadge(pokemon) {
-      if (
-        this.post.image !== pokemon.sprites.front_default &&
-        this.post.image !== pokemon.sprites.shiny_default
-      ) {
+      if (this.post.image === "") {
         this.post.image = pokemon.sprites.front_default;
       } else if (this.post.color === "rare") {
         this.post.image = pokemon.sprites.front_shiny;
