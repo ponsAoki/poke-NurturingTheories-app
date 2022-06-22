@@ -20,6 +20,7 @@
                   :item-text="(item) => item.name + ' ' + item.form"
                   return-object
                   label="ポケモン"
+                  @change="onInput"
                 >
                 </v-autocomplete>
               </v-col>
@@ -407,6 +408,7 @@ export default {
       Pokemon: [], //入力データを格納
       selectedPokemon: "",
       tetsuLink: false,
+      tetstuLinkIntro: "https://yakkun.com/swsh/theory/p",
       tetsuLinkVal: "",
       level: 50,
       post: {
@@ -475,7 +477,41 @@ export default {
   },
 
   methods: {
-    async tetsuLinkOn(i) {
+    onInput: function () {
+      console.log(this.Pokemon);
+
+      // this.tetsuLinkOn();
+      // this.post.c_switch = false;
+      if (this.post.c_switch === null) {
+        this.imgSrc();
+      } else {
+        this.imgSrc();
+        this.imgSrc();
+      }
+      for (let i = 0; i < 2; i++) {
+        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
+          this.abilities.push(this.Pokemon.abilities[i]);
+          this.abilities.push(this.Pokemon.hidden_abilities[i]);
+        }
+      }
+      // this.abilities = [
+      //   this.Pokemon.abilities[0],
+      //   this.Pokemon.abilities[1],
+      //   this.Pokemon.hidden_abilities[0],
+      // ];
+      this.post.Ability = this.abilities[0];
+      this.post.bn[0] = this.Pokemon.status.h;
+      this.post.bn[1] = this.Pokemon.status.a;
+      this.post.bn[2] = this.Pokemon.status.b;
+      this.post.bn[3] = this.Pokemon.status.c;
+      this.post.bn[4] = this.Pokemon.status.d;
+      this.post.bn[5] = this.Pokemon.status.s;
+
+      this.nhCal();
+      this.nOCal();
+    },
+
+    tetsuLinkOn(i) {
       this.tetsuLink = true;
       const Pokemon = this.Pokemon;
       const num = Pokemon.no;
@@ -490,19 +526,15 @@ export default {
           const vari = result.varieties[i];
           const res = vari.pokemon;
           if (vari.is_default == true) {
-            this.tetsuLinkVal = "https://yakkun.com/swsh/theory/p" + `${num}`;
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}`;
           } else if (res.name.match("-mega")) {
-            this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "m";
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}m`;
           } else if (res.name.match("-alola")) {
-            this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "a";
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}a`;
           } else if (res.name.match("-galar")) {
-            this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "g";
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}g`;
           } else if (res.name.match("-")) {
-            this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "f";
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}f`;
           }
           // const pokeApiResult = res.filter((item) => {
           //   return item.name.indexOf("-mega");
@@ -558,35 +590,6 @@ export default {
       } else if (this.post.c_switch === null) {
         this.post.image = pokemon.sprites.front_default;
       }
-    },
-
-    onInput: function () {
-      console.log(this.Pokemon);
-
-      this.tetsuLinkOn();
-      this.post.c_switch = false;
-      this.imgSrc();
-      for (let i = 0; i < 2; i++) {
-        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
-          this.abilities.push(this.Pokemon.abilities[i]);
-          this.abilities.push(this.Pokemon.hidden_abilities[i]);
-        }
-      }
-      // this.abilities = [
-      //   this.Pokemon.abilities[0],
-      //   this.Pokemon.abilities[1],
-      //   this.Pokemon.hidden_abilities[0],
-      // ];
-      this.post.Ability = this.abilities[0];
-      this.post.bn[0] = this.Pokemon.status.h;
-      this.post.bn[1] = this.Pokemon.status.a;
-      this.post.bn[2] = this.Pokemon.status.b;
-      this.post.bn[3] = this.Pokemon.status.c;
-      this.post.bn[4] = this.Pokemon.status.d;
-      this.post.bn[5] = this.Pokemon.status.s;
-
-      this.nhCal();
-      this.nOCal();
     },
 
     nhCal() {
@@ -714,9 +717,9 @@ export default {
   },
 
   watch: {
-    Pokemon() {
-      this.onInput();
-    },
+    // Pokemon() {
+    //   this.imgSrc();
+    // },
     level() {
       this.nhCal();
       this.nOCal();

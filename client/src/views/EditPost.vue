@@ -24,7 +24,7 @@
                 >
                 </v-autocomplete>
               </v-col>
-              <v-col cols="2">
+              <v-col cols="12" sm="3" class="ml-10">
                 <v-select
                   label="Lv."
                   :items="lvs"
@@ -412,13 +412,14 @@ export default {
       Pokemons: [],
       Pokemon: [], //入力データを格納
       tetsuLink: false,
+      tetstuLinkIntro: "https://yakkun.com/swsh/theory/p",
       tetsuLinkVal: "",
       level: 50,
       post: {
         pokemon: [],
         nn: "",
         sex_i: "",
-        color: null,
+        color: "",
         image: "",
         abilities: [],
         ability: "",
@@ -479,13 +480,8 @@ export default {
 
   mounted() {
     console.log(this.$vuetify.breakpoint);
-    // this.natureInArray();
     this.nhCal();
     this.nOCal();
-    // console.log(this.Pokemon);
-    // this.tetsuLinkOn(this.post.simId);
-    // console.log(this.post);
-    // console.log(this.post.simId);
   },
 
   // computed() {
@@ -493,6 +489,35 @@ export default {
   // },
 
   methods: {
+    onInput: function () {
+      console.log(this.post.no);
+      console.log(this.Pokemon);
+      // this.tetsuLinkOn();
+      if (this.post.color === null) {
+        this.imgSrc();
+      } else {
+        this.imgSrc();
+        this.imgSrc();
+      }
+      for (let i = 0; i < 2; i++) {
+        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
+          this.post.abilities.push(this.Pokemon.abilities[i]);
+          this.post.abilities.push(this.Pokemon.hidden_abilities[i]);
+        }
+      }
+
+      this.post.ability = this.post.abilities[0];
+      this.post.bn[0] = this.Pokemon.status.h;
+      this.post.bn[1] = this.Pokemon.status.a;
+      this.post.bn[2] = this.Pokemon.status.b;
+      this.post.bn[3] = this.Pokemon.status.c;
+      this.post.bn[4] = this.Pokemon.status.d;
+      this.post.bn[5] = this.Pokemon.status.s;
+
+      this.nhCal();
+      this.nOCal();
+    },
+
     tetsuLinkOn(i) {
       this.tetsuLink = true;
       const Pokemon = this.Pokemon;
@@ -511,19 +536,19 @@ export default {
           const vari = result.varieties[i];
           const res = vari.pokemon;
           if (vari.is_default == true) {
-            this.tetsuLinkVal = "https://yakkun.com/swsh/theory/p" + `${num}`;
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}`;
           } else if (res.name.match("-mega")) {
             this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "m";
+              this.tetstuLinkIntro + `${num}m`;
           } else if (res.name.match("-alola")) {
             this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "a";
+              this.tetstuLinkIntro + `${num}a`;
           } else if (res.name.match("-galar")) {
             this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "g";
+              this.tetstuLinkIntro + `${num}g`;
           } else if (res.name.match("-")) {
             this.tetsuLinkVal =
-              "https://yakkun.com/swsh/theory/p" + `${num}` + "f";
+              this.tetstuLinkIntro + `${num}f`;
           }
         });
     },
@@ -532,19 +557,19 @@ export default {
       const Pokemon = this.Pokemon;
       const url = this.url + `pokemon-species/${Pokemon.no}`;
       fetch(url)
-        .then((response) => {
+        .then(async(response) => {
           return response.json();
         })
-        .then((pokemon) => {
+        .then(async(pokemon) => {
           for (let i = 0; i < pokemon.names.length; i++) {
-            this.simPokeByNum(Pokemon).then((response) => {
-              // console.log(response);
+            await this.simPokeByNum(Pokemon).then((response) => {
+              console.log(response);
               if (response[i]._id == Pokemon._id) {
                 console.log(i);
                 this.tetsuLinkOn(i);
                 this.post.simId = i;
                 fetch(pokemon.varieties[i].pokemon.url)
-                  .then((res) => {
+                  .then(async(res) => {
                     return res.json();
                   })
                   .then((formI) => {
@@ -603,35 +628,6 @@ export default {
     //     ? fuse.search(search).map(({ item }) => item)
     //     : fuse.list;
     // },
-
-    onInput: function () {
-      console.log(this.post.no);
-      console.log(this.Pokemon);
-      this.tetsuLinkOn();
-      if (this.post.color === null) {
-        this.imgSrc();
-      } else {
-        this.imgSrc();
-        this.imgSrc();
-      }
-      for (let i = 0; i < 2; i++) {
-        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
-          this.post.abilities.push(this.Pokemon.abilities[i]);
-          this.post.abilities.push(this.Pokemon.hidden_abilities[i]);
-        }
-      }
-
-      this.post.ability = this.post.abilities[0];
-      this.post.bn[0] = this.Pokemon.status.h;
-      this.post.bn[1] = this.Pokemon.status.a;
-      this.post.bn[2] = this.Pokemon.status.b;
-      this.post.bn[3] = this.Pokemon.status.c;
-      this.post.bn[4] = this.Pokemon.status.d;
-      this.post.bn[5] = this.Pokemon.status.s;
-
-      this.nhCal();
-      this.nOCal();
-    },
 
     nhCal() {
       if (this.Pokemon.name !== "ヌケニン") {
