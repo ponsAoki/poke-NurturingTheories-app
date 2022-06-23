@@ -21,6 +21,7 @@
                   return-object
                   label="ポケモン"
                   @change="onInput"
+                  :rules="rules"
                 >
                 </v-autocomplete>
               </v-col>
@@ -403,7 +404,8 @@ import API from "../api";
 export default {
   data() {
     return {
-      // rules: [(value) => !!value || "This field is required!"],
+      rules: [(value) => !!value || "入力必須です"],
+      success: false,
       Pokemons: [],
       Pokemon: [], //入力データを格納
       selectedPokemon: "",
@@ -708,11 +710,16 @@ export default {
       }
 
       formData.append("memo", this.post.memo);
-      const response = await API.addPost(formData);
-      this.$router.push({
-        name: "home",
-        params: { message: response.message },
-      });
+      if (this.$refs.form.validate()) {
+        const response = await API.addPost(formData);
+        this.$router.push({
+          name: "home",
+          params: { message: response.message },
+        });
+        this.success = true;
+      } else {
+        this.success = false;
+      }
     },
   },
 

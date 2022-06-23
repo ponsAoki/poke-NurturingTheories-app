@@ -493,12 +493,13 @@ export default {
       console.log(this.post.no);
       console.log(this.Pokemon);
       // this.tetsuLinkOn();
-      if (this.post.color === null) {
-        this.imgSrc();
-      } else {
-        this.imgSrc();
-        this.imgSrc();
-      }
+      // if (this.post.color === null) {
+      //   this.imgSrc();
+      // } else {
+      //   this.imgSrc();
+      //   this.imgSrc();
+      // }
+      this.imgSrc();
       for (let i = 0; i < 2; i++) {
         if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
           this.post.abilities.push(this.Pokemon.abilities[i]);
@@ -538,17 +539,13 @@ export default {
           if (vari.is_default == true) {
             this.tetsuLinkVal = this.tetstuLinkIntro + `${num}`;
           } else if (res.name.match("-mega")) {
-            this.tetsuLinkVal =
-              this.tetstuLinkIntro + `${num}m`;
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}m`;
           } else if (res.name.match("-alola")) {
-            this.tetsuLinkVal =
-              this.tetstuLinkIntro + `${num}a`;
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}a`;
           } else if (res.name.match("-galar")) {
-            this.tetsuLinkVal =
-              this.tetstuLinkIntro + `${num}g`;
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}g`;
           } else if (res.name.match("-")) {
-            this.tetsuLinkVal =
-              this.tetstuLinkIntro + `${num}f`;
+            this.tetsuLinkVal = this.tetstuLinkIntro + `${num}f`;
           }
         });
     },
@@ -557,10 +554,10 @@ export default {
       const Pokemon = this.Pokemon;
       const url = this.url + `pokemon-species/${Pokemon.no}`;
       fetch(url)
-        .then(async(response) => {
+        .then(async (response) => {
           return response.json();
         })
-        .then(async(pokemon) => {
+        .then(async (pokemon) => {
           for (let i = 0; i < pokemon.names.length; i++) {
             await this.simPokeByNum(Pokemon).then((response) => {
               console.log(response);
@@ -569,7 +566,7 @@ export default {
                 this.tetsuLinkOn(i);
                 this.post.simId = i;
                 fetch(pokemon.varieties[i].pokemon.url)
-                  .then(async(res) => {
+                  .then(async (res) => {
                     return res.json();
                   })
                   .then((formI) => {
@@ -593,7 +590,7 @@ export default {
         this.post.image = pokemon.sprites.front_default;
       } else if (this.post.color === "rare") {
         this.post.image = pokemon.sprites.front_shiny;
-      } else if (this.post.color === null) {
+      } else if (this.post.color === "false" || this.post.color === null) {
         this.post.image = pokemon.sprites.front_default;
       }
     },
