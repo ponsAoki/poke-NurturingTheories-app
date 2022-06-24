@@ -5,6 +5,7 @@
         <v-card class="pa-5">
           <v-card-title>新しい育成論</v-card-title>
           <v-divider></v-divider>
+          <!-- <validation-observer ref="observer" v-slot="{ invalid }"> -->
           <v-form
             ref="form"
             @submit.prevent="submitForm"
@@ -21,7 +22,7 @@
                   return-object
                   label="ポケモン"
                   @change="onInput"
-                  :rules="rules"
+                  :rules="[Rules]"
                 >
                 </v-autocomplete>
               </v-col>
@@ -344,6 +345,7 @@
                   :item-text="(item) => item.jname"
                   return-object
                   label="技1"
+                  :rules="rules"
                 >
                 </v-autocomplete>
               </v-col>
@@ -390,8 +392,15 @@
               ></v-textarea>
             </v-col>
 
-            <v-btn type="submit" class="mt-3" color="primary">作成</v-btn>
+            <v-btn
+              type="submit"
+              class="mt-3"
+              color="primary"
+              :disabled="invalid"
+              >作成</v-btn
+            >
           </v-form>
+          <!-- </validation-observer> -->
         </v-card>
       </v-col>
     </v-row>
@@ -400,11 +409,16 @@
 
 <script>
 import API from "../api";
+// import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 export default {
+  // components: {
+  //   ValidationProvider,
+  //   ValidationObserver,
+  // },
   data() {
     return {
-      rules: [(value) => !!value || "入力必須です"],
+      rules: {},
       success: false,
       Pokemons: [],
       Pokemon: [], //入力データを格納
@@ -479,6 +493,13 @@ export default {
   },
 
   methods: {
+    Rules(value) {
+      if (value.length === 0) {
+        return "入力必須です";
+      } else {
+        return true;
+      }
+    },
     onInput: function () {
       console.log(this.Pokemon);
 
@@ -716,10 +737,8 @@ export default {
           name: "home",
           params: { message: response.message },
         });
-        this.success = true;
-      } else {
-        this.success = false;
       }
+      this.Rules(this.Pokemon);
     },
   },
 
