@@ -22,12 +22,20 @@
             </v-col>
             <v-col>
               <div>
-                <v-btn class="ma-1">{{ post.moves[0] }}</v-btn>
-                <v-btn class="ma-1">{{ post.moves[2] }}</v-btn>
+                <v-btn class="ma-1" style="width: 156px">{{
+                  post.moves[0]
+                }}</v-btn>
+                <v-btn class="ma-1" style="width: 156px">{{
+                  post.moves[2]
+                }}</v-btn>
               </div>
               <div>
-                <v-btn class="ma-1">{{ post.moves[1] }}</v-btn>
-                <v-btn class="ma-1">{{ post.moves[3] }}</v-btn>
+                <v-btn class="ma-1" style="width: 156px">{{
+                  post.moves[1]
+                }}</v-btn>
+                <v-btn class="ma-1" style="width: 156px">{{
+                  post.moves[3]
+                }}</v-btn>
               </div>
             </v-col>
           </v-row>
@@ -38,7 +46,7 @@
           <v-card-text class="py-0">
             <v-row>
               <v-col>{{ post.ability }}</v-col>
-              <v-col>{{ post.nature }}</v-col>
+              <v-col v-if="post.nature">{{ post.nature }}</v-col>
             </v-row>
             <br />
             <p>@{{ post.item }}</p>
@@ -46,18 +54,32 @@
               努力値: {{ post.en[0] }} - {{ post.en[1] }} - {{ post.en[2] }} -
               {{ post.en[3] }} - {{ post.en[4] }} - {{ post.en[5] }}
             </p>
-            <p>{{ post.sex }}</p>
+            <p>
+              個体値: {{ post.IN[0] }} - {{ post.IN[1] }} - {{ post.IN[2] }} -
+              {{ post.IN[3] }} - {{ post.IN[4] }} - {{ post.IN[5] }}
+            </p>
+            <p>
+              実数値: {{ post.rn[0] }} - {{ post.rn[1] }} - {{ post.rn[2] }} -
+              {{ post.rn[3] }} - {{ post.rn[4] }} - {{ post.rn[5] }}
+            </p>
+            <!-- <p>{{ post.sex }}</p>
             <p>{{ post.color }}</p>
-            <p>{{ post.no }}</p>
-            <v-col sm="10" class="d-flex justify-end">
-              <v-btn
-                color="success"
-                text
-                :to="{ name: 'edit-post', params: { id: post._id } }"
-                >編集</v-btn
-              >
-              <v-btn color="red" text @click="removePost(post._id)">削除</v-btn>
-            </v-col>
+            <p>{{ post.no }}</p> -->
+            <div class="d-flex justify-end">
+              <div>
+                <v-col sm="10" class="d-flex justify-end mr-0">
+                  <v-btn
+                    color="success"
+                    text
+                    :to="{ name: 'edit-post', params: { id: post._id } }"
+                    >編集</v-btn
+                  >
+                  <v-btn color="red" text @click="removePost(post._id)"
+                    >削除</v-btn
+                  >
+                </v-col>
+              </div>
+            </div>
           </v-card-text>
         </v-card>
       </v-col>

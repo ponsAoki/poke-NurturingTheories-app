@@ -99,8 +99,6 @@
                   class="font-medium shadow relative"
                   v-model="post.Item"
                   :items="Items"
-                  :item-text="(item) => item.name.japanese"
-                  return-object
                   label="持ち物"
                 >
                 </v-autocomplete>
@@ -342,10 +340,7 @@
                 <v-autocomplete
                   v-model="post.moves[0]"
                   :items="Moves"
-                  :item-text="(item) => item.jname"
-                  return-object
                   label="技1"
-                  :rules="rules"
                 >
                 </v-autocomplete>
               </v-col>
@@ -353,8 +348,6 @@
                 <v-autocomplete
                   v-model="post.moves[1]"
                   :items="Moves"
-                  :item-text="(item) => item.jname"
-                  return-object
                   label="技2"
                 >
                 </v-autocomplete>
@@ -365,8 +358,6 @@
                 <v-autocomplete
                   v-model="post.moves[2]"
                   :items="Moves"
-                  :item-text="(item) => item.jname"
-                  return-object
                   label="技3"
                 >
                 </v-autocomplete>
@@ -375,8 +366,6 @@
                 <v-autocomplete
                   v-model="post.moves[3]"
                   :items="Moves"
-                  :item-text="(item) => item.jname"
-                  return-object
                   label="技4"
                 >
                 </v-autocomplete>
@@ -409,20 +398,13 @@
 
 <script>
 import API from "../api";
-// import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 export default {
-  // components: {
-  //   ValidationProvider,
-  //   ValidationObserver,
-  // },
   data() {
     return {
-      rules: {},
       success: false,
       Pokemons: [],
       Pokemon: [], //入力データを格納
-      selectedPokemon: "",
       tetsuLink: false,
       tetstuLinkIntro: "https://yakkun.com/swsh/theory/p",
       tetsuLinkVal: "",
@@ -435,7 +417,7 @@ export default {
         image: "",
         Ability: "",
         Nature: "",
-        Item: [],
+        Item: "",
         moves: [],
         bn: [100, 100, 100, 100, 100, 100],
         IN: [31, 31, 31, 31, 31, 31],
@@ -482,8 +464,10 @@ export default {
   },
   async created() {
     this.Pokemons = await API.getPoke();
-    this.Items = await API.getItem();
-    this.Moves = await API.getMove();
+    const itemsData = await API.getItem();
+    this.Items = itemsData.map((elm) => elm.name.japanese);
+    const movesData = await API.getMove();
+    this.Moves = movesData.map((elm) => elm.jname);
   },
 
   mounted() {
@@ -500,11 +484,9 @@ export default {
         return true;
       }
     },
-    onInput: function () {
+    onInput() {
       console.log(this.Pokemon);
 
-      // this.tetsuLinkOn();
-      // this.post.c_switch = false;
       if (this.post.c_switch === null) {
         this.imgSrc();
       } else {
@@ -517,11 +499,6 @@ export default {
           this.abilities.push(this.Pokemon.hidden_abilities[i]);
         }
       }
-      // this.abilities = [
-      //   this.Pokemon.abilities[0],
-      //   this.Pokemon.abilities[1],
-      //   this.Pokemon.hidden_abilities[0],
-      // ];
       this.post.Ability = this.abilities[0];
       this.post.bn[0] = this.Pokemon.status.h;
       this.post.bn[1] = this.Pokemon.status.a;
@@ -538,7 +515,6 @@ export default {
       this.tetsuLink = true;
       const Pokemon = this.Pokemon;
       const num = Pokemon.no;
-      // console.log(Pokemon);
       const url = this.url + `pokemon-species/${Pokemon.no}`;
       fetch(url)
         .then((response) => {
@@ -559,16 +535,7 @@ export default {
           } else if (res.name.match("-")) {
             this.tetsuLinkVal = this.tetstuLinkIntro + `${num}f`;
           }
-          // const pokeApiResult = res.filter((item) => {
-          //   return item.name.indexOf("-mega");
-          // });
-          // console.log(pokeApiResult);
-          // console.log("megaデータ", pokeApiResult);
         });
-      // const pokeApiResult = (await fetch(url)).json;
-      // console.log(pokeApiResult);
-      // const num = this.Pokemon.no;
-      // this.tetsuLinkVal = "https://yakkun.com/swsh/theory/p" + `${num}`;
     },
 
     imgSrc() {
@@ -581,7 +548,6 @@ export default {
         .then((pokemon) => {
           for (let i = 0; i < pokemon.names.length; i++) {
             this.simPokeByNum(Pokemon).then((response) => {
-              // console.log(response);
               if (response[i]._id == Pokemon._id) {
                 this.tetsuLinkOn(i);
                 this.post.simPokesId = i;
@@ -590,7 +556,6 @@ export default {
                     return res.json();
                   })
                   .then((formI) => {
-                    // console.log(formI);
                     this.imgJadge(formI);
                     return this.simPokesId;
                   });
@@ -686,45 +651,49 @@ export default {
       formData.append("color", this.post.c_switch);
       formData.append("ability", this.post.Ability);
       if (this.abilities.length > 0) {
-        this.abilities.forEach((text, index) => {
-          formData.append("abilities[" + index + "]", text);
+        this.abilities.forEach((elm, index) => {
+          formData.append("abilities[" + index + "]", elm);
         });
       } else {
         formData.append("abilities", []);
       }
       formData.append("nature", this.post.Nature.name);
-      formData.append("item", this.post.Item.name.japanese);
+      if (this.post.Item.length < 1) {
+        formData.append("item", "");
+      } else {
+        formData.append("item", this.post.Item);
+      }
       if (this.post.bn.length > 0) {
-        this.post.bn.forEach((text, index) => {
-          formData.append("bn[" + index + "]", text);
+        this.post.bn.forEach((elm, index) => {
+          formData.append("bn[" + index + "]", elm);
         });
       } else {
         formData.append("bn", []);
       }
       if (this.post.IN.length > 0) {
-        this.post.IN.forEach((text, index) => {
-          formData.append("IN[" + index + "]", text);
+        this.post.IN.forEach((elm, index) => {
+          formData.append("IN[" + index + "]", elm);
         });
       } else {
         formData.append("IN", []);
       }
       if (this.post.en.length > 0) {
-        this.post.en.forEach((text, index) => {
-          formData.append("en[" + index + "]", text);
+        this.post.en.forEach((elm, index) => {
+          formData.append("en[" + index + "]", elm);
         });
       } else {
         formData.append("en", []);
       }
       if (this.post.rn.length > 0) {
-        this.post.rn.forEach((text, index) => {
-          formData.append("rn[" + index + "]", text);
+        this.post.rn.forEach((elm, index) => {
+          formData.append("rn[" + index + "]", elm);
         });
       } else {
         formData.append("rn", []);
       }
       if (this.post.moves.length > 0) {
-        this.post.moves.forEach((text, index) => {
-          formData.append("moves[" + index + "]", text.jname);
+        this.post.moves.forEach((elm, index) => {
+          formData.append("moves[" + index + "]", elm);
         });
       } else {
         formData.append("moves", []);
