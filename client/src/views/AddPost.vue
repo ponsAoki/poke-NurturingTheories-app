@@ -111,10 +111,10 @@
                   :items="natures"
                   v-model="post.Nature"
                   item-text="name"
-                  persistent-hint
                   single-line
                   return-object
                   @change="nOCal"
+                  :rules="rule2"
                   cols="12"
                   md="6"
                 ></v-select>
@@ -341,6 +341,7 @@
                   v-model="post.moves[0]"
                   :items="Moves"
                   label="技1"
+                  :rules="rule1"
                 >
                 </v-autocomplete>
               </v-col>
@@ -402,6 +403,8 @@ import API from "../api";
 export default {
   data() {
     return {
+      rule1: [(v) => !!v || "入力必須です"],
+      rule2: [(v) => !!v || "選択必須です"],
       success: false,
       Pokemons: [],
       Pokemon: [], //入力データを格納

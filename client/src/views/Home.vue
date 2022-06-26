@@ -46,10 +46,10 @@
           <v-card-text class="py-0">
             <v-row>
               <v-col>{{ post.ability }}</v-col>
-              <v-col v-if="post.nature">{{ post.nature }}</v-col>
+              <v-col>{{ post.nature }}</v-col>
             </v-row>
             <br />
-            <p>@{{ post.item }}</p>
+            <p>@{{ post.item ? `${post.item}` : "持ち物なし" }}</p>
             <p>
               努力値: {{ post.en[0] }} - {{ post.en[1] }} - {{ post.en[2] }} -
               {{ post.en[3] }} - {{ post.en[4] }} - {{ post.en[5] }}
