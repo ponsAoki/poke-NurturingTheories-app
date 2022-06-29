@@ -3,6 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const AuthRoute = require('./routes/routesAuth')
+const PostRoute = require('./routes/routesPost')
+const SearchRoute = require('./routes/routesSearch')
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,8 +25,9 @@ mongoose.connect(process.env.DB_URI, {
     .catch((err) => console.log(err));
 
 //routes.prefix
-app.use("/api/post", require('./routes/routesPost'));
-app.use("/api/search", require('./routes/routesSearch'));
+app.use("/api/", AuthRoute);
+app.use("/api/post", PostRoute);
+app.use("/api/search", SearchRoute);
 
 //start server
-app.listen(port, () => console.log('server running at http://localhost:${port}'));
+app.listen(port, () => console.log(`server running at http://localhost:${port}`));
