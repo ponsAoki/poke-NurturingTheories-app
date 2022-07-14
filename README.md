@@ -11,7 +11,7 @@
 ・まだ未実装だが、認証機能をつけて、ユーザーオリジナルの記録ツールにしたい
 
 ## 使用技術
-Node.js (express) / MongoDB / Vue.js (Vuetify)
+Node.js (express) / MongoDB / Vue.js / Vuetify
 
 ## Requirement (バージョンなど)
 
