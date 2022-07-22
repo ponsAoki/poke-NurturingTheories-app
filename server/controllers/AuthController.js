@@ -78,7 +78,7 @@ const refreshToken = (req, res, next) => {
         } else {
             let token = jwt.sign({ name: decode.name }, 'AzQ,PI)0(', { expiresIn: '60s' })
             let refreshToken = req.body.refreshToken
-            refreshToken.status(200).json({
+            res.status(200).json({
                 message: 'トークンのリフレッシュ成功！',
                 token,
                 refreshToken
