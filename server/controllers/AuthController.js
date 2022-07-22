@@ -45,12 +45,14 @@ const login = (req, res, next) => {
                             error: err
                         })
                     }
-                    //passwordが一致した場合トークンを作成(有効期間1日)
+                    //passwordが一致した場合トークンを作成(有効期間付き)
                     if (result) {
-                        let token = jwt.sign({ name: user.name }, 'verySecretValue', { expiresIn: '1day' })
+                        let token = jwt.sign({ name: user.name }, 'AzQ,PI)0(', { expiresIn: '1m' })
+                        let refreshToken = jwt.sign({ name: user.name }, 'refreshTokenSecret', { expiresIn: '48h' })
                         res.json({
                             message: 'ログイン完了!',
-                            token
+                            token,
+                            refreshToken
                         })
                     } else {
                         res.json({
@@ -66,7 +68,27 @@ const login = (req, res, next) => {
         })
 }
 
+const refreshToken = (req, res, next) => {
+    const refreshToken = req.body.refreshToken
+    jwt.verify(refreshToken, 'refreshTokenSecret', (err, decode) => {
+        if (err) {
+            res.status(400).json({
+                err
+            })
+        } else {
+            let token = jwt.sign({ name: decode.name }, 'AzQ,PI)0(', { expiresIn: '60s' })
+            let refreshToken = req.body.refreshToken
+            refreshToken.status(200).json({
+                message: 'トークンのリフレッシュ成功！',
+                token,
+                refreshToken
+            })
+        }
+    })
+}
+
 module.exports = {
     register,
-    login
+    login,
+    refreshToken
 }

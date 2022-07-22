@@ -3,6 +3,8 @@ const router = express.Router();
 const API = require('../controllers/api');
 const multer = require('multer');
 
+const authenticate = require('../middleware/authenticate')
+
 //multer middleware
 let storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -17,7 +19,7 @@ let upload = multer({
     storage: storage,
 }).single("image");
 
-router.get("/", API.fetchAllPost);
+router.get("/", authenticate, API.fetchAllPost);
 router.get("/:id", API.fetchPostByID);
 router.post("/", upload, API.createPost);
 router.patch("/:id", upload, API.updatePost);
