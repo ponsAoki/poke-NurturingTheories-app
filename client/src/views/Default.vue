@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <!-- <v-navigation-drawer v-model="drawer" app>
+  <div>
+    <v-navigation-drawer v-model="drawer" app>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title> ポケモン my育成論工房 </v-list-item-title>
@@ -26,15 +26,11 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title>ポケモン my育成論工房</v-toolbar-title>
-    </v-app-bar> -->
-
-    <v-main>
-      <router-view></router-view>
-    </v-main>
-  </v-app>
+    </v-app-bar>
+  </div>
 </template>
 
-<!-- <script>
+<script>
 // import Default from "./views/Default.vue";
 export default {
   data: () => ({
@@ -46,4 +42,4 @@ export default {
     ],
   }),
 };
-</script> -->
+</script>

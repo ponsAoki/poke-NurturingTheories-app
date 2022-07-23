@@ -5,7 +5,7 @@ const ObjectId = require('mongodb').ObjectId
 
 
 module.exports = class API {
-    //fetch all posts
+    //投稿一覧表示
     static async fetchAllPost(req, res) {
             try {
                 const posts = await Post.find();
@@ -14,7 +14,7 @@ module.exports = class API {
                 res.status(404).json({ message: err.message })
             }
         }
-        //fetch post by ID
+        //投稿1つ取得
     static async fetchPostByID(req, res) {
             const id = req.params.id
             try {
@@ -24,12 +24,10 @@ module.exports = class API {
                 res.status(400).json({ message: error.message })
             }
         }
-        //create a post
+        //投稿 (育成論作成)
     static async createPost(req, res) {
             const post = req.body;
             console.log(post);
-            // const imagename = req.file.filename;
-            // post.image = imagename;
             try {
                 await Post.create(post);
                 res.status(200).json({ message: '新しい育成論が追加されました。' })
@@ -37,7 +35,7 @@ module.exports = class API {
                 res.status(400).json({ message: error.message })
             }
         }
-        //update a post
+        //育成論更新
     static async updatePost(req, res) {
             const id = req.params.id;
             const newPost = req.body
@@ -51,7 +49,7 @@ module.exports = class API {
                 res.status(404).json({ message: error.message })
             }
         }
-        //delete a post
+        //育成論破棄
     static async deletePost(req, res) {
         const id = req.params.id
         try {
@@ -69,7 +67,7 @@ module.exports = class API {
         }
     }
 
-    //search pokemon
+    //ポケモンデータ全件取得
     static async searchPoke(req, res) {
             //データベース接続
             await MongoClient.connect('mongodb://localhost:27017', {
@@ -87,7 +85,7 @@ module.exports = class API {
                 })
             });
         }
-        //search item
+        //道具データ全件取得
     static async searchItem(req, res) {
             //データベース接続
             await MongoClient.connect('mongodb://localhost:27017', {
@@ -105,7 +103,7 @@ module.exports = class API {
                 })
             });
         }
-        //search moves
+        //技データ全件取得
     static async searchMove(req, res) {
             //データベース接続
             await MongoClient.connect('mongodb://localhost:27017', {
@@ -154,7 +152,7 @@ module.exports = class API {
                 res.status(400).json({ message: error.message })
             }
         }
-        //serach pokemon by number
+        //任意の図鑑番号に該当するポケモン全部取得
     static async searchPokeByNum(req, res) {
         const Pokemon = req.body
         console.log(Pokemon.no);

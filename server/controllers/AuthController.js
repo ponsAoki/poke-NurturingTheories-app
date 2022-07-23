@@ -35,7 +35,7 @@ const login = (req, res, next) => {
     const password = req.body.password
 
     //userNameが一致するレコードをDBから取得
-    User.findOne({ email: userName })
+    User.findOne({ name: userName })
         .then(user => {
             if (user) {
                 //リクエスト(POST)されたpasswrodをDBのものと比較
@@ -49,20 +49,20 @@ const login = (req, res, next) => {
                     if (result) {
                         let token = jwt.sign({ name: user.name }, 'AzQ,PI)0(', { expiresIn: '1m' })
                         let refreshToken = jwt.sign({ name: user.name }, 'refreshTokenSecret', { expiresIn: '48h' })
-                        res.json({
+                        res.status(200).json({
                             message: 'ログイン完了!',
                             token,
                             refreshToken
                         })
                     } else {
-                        res.json({
+                        res.status(401).json({
                             message: 'パスワードが違います'
                         })
                     }
                 })
             } else {
-                res.json({
-                    message: 'ユーザーが見当たりません'
+                res.status(404).json({
+                    message: 'ユーザー登録されていないようです'
                 })
             }
         })
