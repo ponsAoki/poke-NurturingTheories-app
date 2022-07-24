@@ -87,8 +87,17 @@ const refreshToken = (req, res, next) => {
     })
 }
 
+//トークン検証後に、有効なトークンに基づいてユーザー情報を取得する関数
+const getUser = async(req, res) => {
+    const user = await User.findOne({ name: req.body.name })
+
+    if (!user) return res.status(404).json('ユーザーが存在しません')
+    res.status(200).json(user)
+}
+
 module.exports = {
     register,
     login,
-    refreshToken
+    refreshToken,
+    getUser
 }

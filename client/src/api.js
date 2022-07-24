@@ -8,6 +8,8 @@ const loginUrl = '/api/login';
 
 export default class API {
     // constructor()
+
+    //ユーザー関連
     //ユーザー登録
     static async register(query) {
         const res = await axios.post(registerUrl, query)
@@ -21,64 +23,80 @@ export default class API {
 
     //ログイン
     static async login(query) {
-        const res = await axios.post(loginUrl, query)
-            .catch(err => {
-                console.log('接続エラー', err);
-            })
-        console.log(res);
-        if (res.status == 200) {
+        try {
+            const res = await axios.post(loginUrl, query)
+                .catch(err => {
+                    console.log('接続エラー', err);
+                })
+            console.log(res);
+            const token = res.data.token
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
             router.push('/')
+            return res.data
+        } catch (err) {
+            error.value = err.res.data
         }
-        return res.data
     }
 
-    //to get all posts from the server
+
+    //投稿関連
+    //投稿を全件取得
     static async getAllPost() {
-            const res = await axios.get(postUrl);
-            return res.data;
-        }
-        //to get single post by id
+        const res = await axios.get(postUrl);
+        return res.data;
+    }
+
+    //idに基づいて投稿１件だけ取得
     static async getPostByID(id) {
-            const res = await axios.get(`${postUrl}/${id}`);
-            return res.data;
-        }
-        //to insert post into database
+        const res = await axios.get(`${postUrl}/${id}`);
+        return res.data;
+    }
+
+    //新しい投稿
     static async addPost(post) {
-            const res = await axios.post(postUrl, post);
-            return res.data;
-        }
-        //to update post into database
+        const res = await axios.post(postUrl, post);
+        return res.data;
+    }
+
+    //投稿を更新
     static async updatePost(id, post) {
-            const res = await axios.patch(`${postUrl}/${id}`, post);
-            return res.data;
-        }
-        //to delete a post
+        const res = await axios.patch(`${postUrl}/${id}`, post);
+        return res.data;
+    }
+
+    //投稿削除
     static async deletePost(id) {
         const res = await axios.delete(`${postUrl}/${id}`);
         return res.data;
     }
 
-    //search pokemon
+
+    //ポケモンのデータ関連
+    //ポケモンデータ全件取得
     static async getPoke() {
-            const res = await axios.get(`${searchUrl}/poke`);
-            return res.data;
-        }
-        //search item
+        const res = await axios.get(`${searchUrl}/poke`);
+        return res.data;
+    }
+
+    //道具データ全件取得
     static async getItem() {
-            const res = await axios.get(`${searchUrl}/item`);
-            return res.data;
-        }
-        //search move
+        const res = await axios.get(`${searchUrl}/item`);
+        return res.data;
+    }
+
+    //技データ全件取得
     static async getMove() {
-            const res = await axios.get(`${searchUrl}/move`);
-            return res.data;
-        }
-        // search pokemon by id
+        const res = await axios.get(`${searchUrl}/move`);
+        return res.data;
+    }
+
+    // 投稿IDから該当するポケモンのデータ取得
     static async getPokeById(id) {
-            const res = await axios.get(`${searchUrl}/${id}`)
-            return res.data
-        }
-        //search pokemon by number
+        const res = await axios.get(`${searchUrl}/${id}`)
+        return res.data
+    }
+
+    //図鑑番号から該当するポケモンのデータ取得
     static async getPokeByNum(post) {
         const res = await axios.post(`${searchUrl}/num`, post)
         return res.data

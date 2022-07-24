@@ -6,6 +6,8 @@ import Home from '../views/Home.vue'
 import AddPost from '../views/AddPost.vue'
 import Post from '../views/Post.vue'
 import EditPost from '../views/EditPost.vue'
+import axios from 'axios'
+const userUrl = '/api/user'
 
 Vue.use(VueRouter)
 
@@ -22,22 +24,26 @@ const routes = [{
     {
         path: '/',
         name: 'home',
-        component: Home
+        component: Home,
+        meta: { requiresAuth: true }
     },
     {
         path: '/add-pokemon',
         name: 'add-pokemon',
-        component: AddPost
+        component: AddPost,
+        meta: { requiresAuth: true }
     },
     {
         path: '/post/:id',
         name: 'post',
-        component: Post
+        component: Post,
+        meta: { requiresAuth: true }
     },
     {
         path: '/edit-post/:id',
         name: 'edit-post',
-        component: EditPost
+        component: EditPost,
+        meta: { requiresAuth: true }
     },
     {
         path: '/about',
@@ -54,6 +60,25 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+})
+
+router.beforeEach(async(to, from, next) => {
+    if (to.meta.requiresAuth) {
+        try {
+            const res = await axios.get(userUrl)
+            if (res.status == 200) {
+                console.log(res.data.message);
+                next()
+            }
+        } catch (error) {
+            // if ()
+            console.log("例外", error);
+            next('./login')
+        }
+    } else {
+        console.log(to.meta.requiresAuth);
+        next()
+    }
 })
 
 export default router

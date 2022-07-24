@@ -1,404 +1,408 @@
 <template>
-  <v-container>
-    <v-row no-gutters>
-      <v-col sm="10" class="mx-auto">
-        <v-card class="pa-5">
-          <v-card-title>新しい育成論</v-card-title>
-          <v-divider></v-divider>
-          <!-- <validation-observer ref="observer" v-slot="{ invalid }"> -->
-          <v-form
-            ref="form"
-            @submit.prevent="submitForm"
-            class="pa-5"
-            enctype="multipart/form-data"
-          >
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  class="font-medium shadow relative"
-                  v-model="Pokemon"
-                  :items="Pokemons"
-                  :item-text="(item) => item.name + ' ' + item.form"
-                  return-object
-                  label="ポケモン"
-                  @change="onInput"
-                  :rules="[Rules]"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="12" sm="3" class="ml-10">
-                <v-select
-                  label="Lv."
-                  :items="lvs"
-                  v-model.number="level"
-                ></v-select>
-              </v-col>
-            </v-row>
-            <div v-if="tetsuLink">
-              <a
-                v-bind:href="tetsuLinkVal"
-                alt="ポケモン徹底攻略様の育成論を参照"
-                target="_blank"
-                rel="noopener noreferrer"
-                >このポケモンの他の育成論</a
-              >
-              <p>参照元: 「ポケモン徹底攻略」様</p>
-            </div>
-            <v-row>
-              <v-col cols="5" sm="5" class="mt-3">
-                <v-text-field
-                  label="ニックネーム"
-                  v-model="post.nn"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="1"></v-col>
-              <v-col class="ml-10 h-100">
-                <img :src="post.image" />
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col cols="6" sm="6" class="pt-7">
-                <v-btn-toggle v-model="post.sex_i">
-                  <v-btn small>
-                    <v-icon small>なし</v-icon>
-                  </v-btn>
-
-                  <v-btn small>
-                    <v-icon small color="blue">♂</v-icon>
-                  </v-btn>
-
-                  <v-btn small>
-                    <v-icon small color="red">♀</v-icon>
-                  </v-btn>
-                </v-btn-toggle>
-              </v-col>
-              <v-col cols="1"></v-col>
-              <v-col class="">
-                <v-switch
-                  v-model="post.c_switch"
-                  label="色違い"
-                  color="success"
-                  value="rare"
-                  hide-details
-                  @change="imgSrc"
-                ></v-switch>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <v-select
-                  label="特性"
-                  v-model="post.Ability"
-                  :items="abilities"
-                ></v-select>
-              </v-col>
-              <v-col>
-                <v-autocomplete
-                  class="font-medium shadow relative"
-                  v-model="post.Item"
-                  :items="Items"
-                  label="持ち物"
-                >
-                </v-autocomplete>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-select
-                  label="性格"
-                  :items="natures"
-                  v-model="post.Nature"
-                  item-text="name"
-                  single-line
-                  return-object
-                  @change="nOCal"
-                  :rules="rule2"
-                  cols="12"
-                  md="6"
-                ></v-select>
-              </v-col>
-            </v-row>
-            <br />
-            <v-col cols="12" sm="10">
-              <v-simple-table>
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th class="th">種族値</th>
-                    <th class="th">個体値</th>
-                    <th class="th">努力値</th>
-                    <th class="th">実数値</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td width="10%">H</td>
-                    <td>
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.bn[0]"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.IN[0]"
-                        @input="nhCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.en[0]"
-                        @input="nhCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.rn[0]"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>A</td>
-                    <td>
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.bn[1]"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.IN[1]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.en[1]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.rn[1]"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>B</td>
-                    <td>
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.bn[2]"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.IN[2]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.en[2]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.rn[2]"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>C</td>
-                    <td>
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.bn[3]"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.IN[3]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.en[3]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.rn[3]"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>D</td>
-                    <td>
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.bn[4]"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.IN[4]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.en[4]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.rn[4]"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>S</td>
-                    <td>
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.bn[5]"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.IN[5]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="ei"
-                        v-model.number="post.en[5]"
-                        @input="nOCal"
-                      />
-                    </td>
-                    <td class="hd">
-                      <input
-                        type="text"
-                        class="hi"
-                        v-model.number="post.rn[5]"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </v-simple-table>
-            </v-col>
-            <br />
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  v-model="post.moves[0]"
-                  :items="Moves"
-                  label="技1"
-                  :rules="rule1"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  v-model="post.moves[1]"
-                  :items="Moves"
-                  label="技2"
-                >
-                </v-autocomplete>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  v-model="post.moves[2]"
-                  :items="Moves"
-                  label="技3"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  v-model="post.moves[3]"
-                  :items="Moves"
-                  label="技4"
-                >
-                </v-autocomplete>
-              </v-col>
-            </v-row>
-            <br />
-            <br />
-            <v-col>
-              <v-textarea
-                v-model="post.memo"
-                label="調整意図や役割などメモ"
-                outlined
-              ></v-textarea>
-            </v-col>
-
-            <v-btn
-              type="submit"
-              class="mt-3"
-              color="primary"
-              :disabled="invalid"
-              >作成</v-btn
+  <div>
+    <Default></Default>
+    <v-container>
+      <v-row no-gutters>
+        <v-col sm="10" class="mx-auto">
+          <v-card class="pa-5">
+            <v-card-title>新しい育成論</v-card-title>
+            <v-divider></v-divider>
+            <!-- <validation-observer ref="observer" v-slot="{ invalid }"> -->
+            <v-form
+              ref="form"
+              @submit.prevent="submitForm"
+              class="pa-5"
+              enctype="multipart/form-data"
             >
-          </v-form>
-          <!-- </validation-observer> -->
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <v-autocomplete
+                    class="font-medium shadow relative"
+                    v-model="Pokemon"
+                    :items="Pokemons"
+                    :item-text="(item) => item.name + ' ' + item.form"
+                    return-object
+                    label="ポケモン"
+                    @change="onInput"
+                    :rules="[Rules]"
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" sm="3" class="ml-10">
+                  <v-select
+                    label="Lv."
+                    :items="lvs"
+                    v-model.number="level"
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <div v-if="tetsuLink">
+                <a
+                  v-bind:href="tetsuLinkVal"
+                  alt="ポケモン徹底攻略様の育成論を参照"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >このポケモンの他の育成論</a
+                >
+                <p>参照元: 「ポケモン徹底攻略」様</p>
+              </div>
+              <v-row>
+                <v-col cols="5" sm="5" class="mt-3">
+                  <v-text-field
+                    label="ニックネーム"
+                    v-model="post.nn"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="1"></v-col>
+                <v-col class="ml-10 h-100">
+                  <img :src="post.image" />
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col cols="6" sm="6" class="pt-7">
+                  <v-btn-toggle v-model="post.sex_i">
+                    <v-btn small>
+                      <v-icon small>なし</v-icon>
+                    </v-btn>
+
+                    <v-btn small>
+                      <v-icon small color="blue">♂</v-icon>
+                    </v-btn>
+
+                    <v-btn small>
+                      <v-icon small color="red">♀</v-icon>
+                    </v-btn>
+                  </v-btn-toggle>
+                </v-col>
+                <v-col cols="1"></v-col>
+                <v-col class="">
+                  <v-switch
+                    v-model="post.c_switch"
+                    label="色違い"
+                    color="success"
+                    value="rare"
+                    hide-details
+                    @change="imgSrc"
+                  ></v-switch>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col>
+                  <v-select
+                    label="特性"
+                    v-model="post.Ability"
+                    :items="abilities"
+                  ></v-select>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    class="font-medium shadow relative"
+                    v-model="post.Item"
+                    :items="Items"
+                    label="持ち物"
+                  >
+                  </v-autocomplete>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-select
+                    label="性格"
+                    :items="natures"
+                    v-model="post.Nature"
+                    item-text="name"
+                    single-line
+                    return-object
+                    @change="nOCal"
+                    :rules="rule2"
+                    cols="12"
+                    md="6"
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <br />
+              <v-col cols="12" sm="10">
+                <v-simple-table>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th class="th">種族値</th>
+                      <th class="th">個体値</th>
+                      <th class="th">努力値</th>
+                      <th class="th">実数値</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td width="10%">H</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.bn[0]"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.IN[0]"
+                          @input="nhCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.en[0]"
+                          @input="nhCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.rn[0]"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>A</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.bn[1]"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.IN[1]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.en[1]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.rn[1]"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>B</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.bn[2]"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.IN[2]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.en[2]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.rn[2]"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>C</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.bn[3]"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.IN[3]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.en[3]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.rn[3]"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>D</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.bn[4]"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.IN[4]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.en[4]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.rn[4]"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>S</td>
+                      <td>
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.bn[5]"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.IN[5]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="ei"
+                          v-model.number="post.en[5]"
+                          @input="nOCal"
+                        />
+                      </td>
+                      <td class="hd">
+                        <input
+                          type="text"
+                          class="hi"
+                          v-model.number="post.rn[5]"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </v-simple-table>
+              </v-col>
+              <br />
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <v-autocomplete
+                    v-model="post.moves[0]"
+                    :items="Moves"
+                    label="技1"
+                    :rules="rule1"
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-autocomplete
+                    v-model="post.moves[1]"
+                    :items="Moves"
+                    label="技2"
+                  >
+                  </v-autocomplete>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <v-autocomplete
+                    v-model="post.moves[2]"
+                    :items="Moves"
+                    label="技3"
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-autocomplete
+                    v-model="post.moves[3]"
+                    :items="Moves"
+                    label="技4"
+                  >
+                  </v-autocomplete>
+                </v-col>
+              </v-row>
+              <br />
+              <br />
+              <v-col>
+                <v-textarea
+                  v-model="post.memo"
+                  label="調整意図や役割などメモ"
+                  outlined
+                ></v-textarea>
+              </v-col>
+
+              <v-btn
+                type="submit"
+                class="mt-3"
+                color="primary"
+                :disabled="invalid"
+                >作成</v-btn
+              >
+            </v-form>
+            <!-- </validation-observer> -->
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
 import API from "../api";
+import Default from "./Default.vue";
 
 export default {
   data() {
@@ -407,7 +411,7 @@ export default {
       rule2: [(v) => !!v || "選択必須です"],
       success: false,
       Pokemons: [],
-      Pokemon: [], //入力データを格納
+      Pokemon: [],
       tetsuLink: false,
       tetstuLinkIntro: "https://yakkun.com/swsh/theory/p",
       tetsuLinkVal: "",
@@ -461,7 +465,6 @@ export default {
         { name: "きまぐれ" },
         { name: "まじめ" },
       ],
-
       Moves: [],
     };
   },
@@ -472,13 +475,11 @@ export default {
     const movesData = await API.getMove();
     this.Moves = movesData.map((elm) => elm.jname);
   },
-
   mounted() {
     console.log(this.$vuetify.breakpoint);
     this.nhCal();
     this.nOCal();
   },
-
   methods: {
     Rules(value) {
       if (value.length === 0) {
@@ -489,7 +490,6 @@ export default {
     },
     onInput() {
       console.log(this.Pokemon);
-
       if (this.post.c_switch === null) {
         this.imgSrc();
       } else {
@@ -509,11 +509,9 @@ export default {
       this.post.bn[3] = this.Pokemon.status.c;
       this.post.bn[4] = this.Pokemon.status.d;
       this.post.bn[5] = this.Pokemon.status.s;
-
       this.nhCal();
       this.nOCal();
     },
-
     tetsuLinkOn(i) {
       this.tetsuLink = true;
       const Pokemon = this.Pokemon;
@@ -540,7 +538,6 @@ export default {
           }
         });
     },
-
     imgSrc() {
       const Pokemon = this.Pokemon;
       const url = this.url + `pokemon-species/${Pokemon.no}`;
@@ -567,12 +564,10 @@ export default {
           }
         });
     },
-
     async simPokeByNum(p) {
       const res = await API.getPokeByNum(p);
       return await res;
     },
-
     imgJadge(pokemon) {
       if (this.post.image === "") {
         this.post.image = pokemon.sprites.front_default;
@@ -582,7 +577,6 @@ export default {
         this.post.image = pokemon.sprites.front_default;
       }
     },
-
     nhCal() {
       if (this.Pokemon.name !== "ヌケニン") {
         this.post.rn[0] =
@@ -636,7 +630,6 @@ export default {
         i++;
       }
     },
-
     // selectFile(file) {
     //   this.image = file[0];
     // },
@@ -701,7 +694,6 @@ export default {
       } else {
         formData.append("moves", []);
       }
-
       formData.append("memo", this.post.memo);
       if (this.$refs.form.validate()) {
         const response = await API.addPost(formData);
@@ -713,7 +705,6 @@ export default {
       this.Rules(this.Pokemon);
     },
   },
-
   watch: {
     // Pokemon() {
     //   this.imgSrc();
@@ -723,6 +714,7 @@ export default {
       this.nOCal();
     },
   },
+  components: { Default },
 };
 </script>
 <style scoped>
