@@ -81,7 +81,7 @@
 
 <script>
 import API from "../api";
-import Default from "./Default.vue";
+import Default from "../components/Default.vue";
 export default {
   data() {
     return {

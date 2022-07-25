@@ -1,7 +1,9 @@
 <template>
   <v-card width="400px" class="mx-auto mt-10">
     <v-cad-title>
-      <h1 class="display-1">ログイン</h1>
+      <h1 class="display-1">
+        {{ $store.state.message }}ログイン{{ $store.state.user.user.name }}
+      </h1>
     </v-cad-title>
     <v-card-text>
       <v-form @submit.prevent="login">

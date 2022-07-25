@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import Default from "./Default.vue";
+import Default from "../components/Default.vue";
 import API from "../api";
 // import axios from "axios";
 export default {
