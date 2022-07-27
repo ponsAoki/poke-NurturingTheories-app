@@ -1,9 +1,7 @@
 <template>
   <v-card width="400px" class="mx-auto mt-10">
     <v-cad-title>
-      <h1 class="display-1">
-        {{ $store.state.message }}ログイン{{ $store.state.user.user.name }}
-      </h1>
+      <h1 class="display-1">{{ $store.state.message }}ログイン</h1>
     </v-cad-title>
     <v-card-text>
       <v-form @submit.prevent="login">
@@ -29,7 +27,10 @@
 </template>
 
 <script>
-import API from "../api";
+// import API from "../api";
+
+import { store } from "../store/index";
+import router from "../router/index";
 
 export default {
   data: () => ({
@@ -39,12 +40,18 @@ export default {
   }),
 
   methods: {
-    async login() {
-      const res = await API.login({
-        username: this.userName,
-        password: this.password,
-      });
-      console.log(res.message);
+    login() {
+      store
+        .dispatch("user/login", {
+          username: this.userName,
+          password: this.password,
+        })
+        .then(() => {
+          router.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
