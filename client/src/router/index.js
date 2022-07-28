@@ -71,9 +71,8 @@ router.beforeEach(async(to, from, next) => {
                 next()
             }
         } catch (error) {
-            // if ()
             console.log("例外", error);
-            next('./login')
+            next('login')
         }
     } else {
         console.log(to.meta.requiresAuth);
