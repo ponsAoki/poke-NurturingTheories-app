@@ -4,7 +4,9 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title> ポケモン my育成論工房 </v-list-item-title>
-          <v-list-item-subtitle> メニュー </v-list-item-subtitle>
+          <v-list-item-subtitle>
+            メニュー {{ $store.state.users }}</v-list-item-subtitle
+          >
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
@@ -25,7 +27,9 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>ポケモン my育成論工房</v-toolbar-title>
+      <v-toolbar-title
+        >ポケモン my育成論工房{{ $store.state.user.user }}</v-toolbar-title
+      >
     </v-app-bar>
   </div>
 </template>

@@ -1,10 +1,13 @@
 import axios from 'axios';
 import router from './router/index'
+import { store } from './store/index'
+// import { useStore } from 'vuex'
 const postUrl = '/api/post';
 const searchUrl = '/api/search';
 const registerUrl = '/api/register';
-const loginUrl = '/api/login';
+// const loginUrl = '/api/login';
 
+// const store = useStore()
 
 export default class API {
     // constructor()
@@ -16,27 +19,33 @@ export default class API {
             .catch(err => {
                 console.log('接続エラー', err);
             })
+        if (res) {
+            store.dispatch('user/login', {
+                username: query.username,
+                password: query.password
+            }).then(() => {
+                router.push('/')
+            }).catch((err) => {
+                console.log(err.message)
+            })
+        } else {
+            console.log('登録大失敗');
+        }
         console.log(res);
-        router.push('/')
-        return res.data
+        // router.push('/')
+        // return res.data
     }
 
     //ログイン
-    static async login(query) {
-        try {
-            const res = await axios.post(loginUrl, query)
-                .catch(err => {
-                    console.log('接続エラー', err);
-                })
-            console.log(res);
-            const token = res.data.token
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            router.push('/')
-            return res.data
-        } catch (err) {
-            error.value = err.res.data
-        }
-    }
+    // static async login(query) {
+    //     store.dispatch('user/login', query)
+    //         .then(() => {
+    //             router.push('/')
+    //         })
+    //         .catch((err) => {
+    //             console.log("エラー", err);
+    //         })
+    // }
 
 
     //投稿関連

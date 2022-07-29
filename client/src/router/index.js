@@ -9,6 +9,8 @@ import EditPost from '../views/EditPost.vue'
 import axios from 'axios'
 const userUrl = '/api/user'
 
+import { store } from '../store'
+
 Vue.use(VueRouter)
 
 const routes = [{
@@ -64,16 +66,22 @@ const router = new VueRouter({
 
 router.beforeEach(async(to, from, next) => {
     if (to.meta.requiresAuth) {
-        try {
-            const res = await axios.get(userUrl)
-            if (res.status == 200) {
-                console.log(res.data.message);
-                next()
-            }
-        } catch (error) {
-            console.log("例外", error);
+        console.log(store.state.user.user);
+        if (!store.state.user.user) {
             next('login')
+        } else {
+            next()
         }
+        // try {
+        //     const res = await axios.get(userUrl)
+        //     if (res.status == 200) {
+        //         console.log(res.data.message);
+        //         next()
+        //     }
+        // } catch (error) {
+        //     console.log("例外", error);
+        //     next('login')
+        // }
     } else {
         console.log(to.meta.requiresAuth);
         next()

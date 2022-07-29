@@ -19,7 +19,7 @@ let upload = multer({
     storage: storage,
 }).single("image");
 
-router.get("/", authenticate, API.fetchAllPost);
+router.get("/", API.fetchAllPost);
 router.get("/:id", API.fetchPostByID);
 router.post("/", upload, API.createPost);
 router.patch("/:id", upload, API.updatePost);

@@ -12,7 +12,7 @@ const register = (req, res, next) => {
         }
         let user = new User({
             name: req.body.name,
-            email: req.body.email,
+            // email: req.body.email,
             password: hashedPass,
         })
         user.save()
@@ -36,17 +36,27 @@ const register = (req, res, next) => {
 const login = async(req, res, next) => {
     const userName = req.body.username
     const password = req.body.password
+    console.log(userName);
 
     //userNameが一致するレコードをDBから取得
     const user = await User.findOne({ name: userName })
+        // console.log(user);
         //userNameが見つからなかった場合
-    if (!user) return res.status(404).json('ユーザー登録されていないようです')
+    if (!user) return res.status(401).json('ユーザー登録されていないようです')
 
-    if (password == null) return res.status(404).json('passwrodがnullです')
-        //入力されたパスワードとDBのパスワード比較
-    const match = bcrypt.compare(password, user.password)
-    if (!match) return res.status(401).json('パスワードが違います')
-        //パスワードが正しかった場合
+    // if (password == null) return res.status(404).json('passwrodがnullです')
+
+    // console.log(password);
+    // console.log(user.password);
+    //入力されたパスワードとDBのパスワード比較
+    const match = await bcrypt.compare(password, user.password)
+    console.log("ここまで行きました");
+    if (!match) {
+        console.log('パスワードが違います');
+        return res.status(401).json('パスワードが違います')
+    }
+    console.log("ここで止まってます");
+    //パスワードが正しかった場合
     let token = jwt.sign({ name: user.name }, 'AzQ,PI)0(', { expiresIn: '1m' })
     let refreshToken = jwt.sign({ name: user.name }, 'refreshTokenSecret', { expiresIn: '48h' })
     return res.status(200).json({
@@ -80,7 +90,9 @@ const refreshToken = (req, res, next) => {
 
 //トークン検証後に、有効なトークンに基づいてユーザー情報を取得する関数
 const getUser = async(req, res) => {
-    const user = await User.findOne({ name: req.body.name })
+    const user = await User.findOne({ name: req.user.name })
+    console.log('getUser関数内です');
+    console.log(user);
 
     if (!user) return res.status(404).json('ユーザーが存在しません')
     res.status(200).json(user)
