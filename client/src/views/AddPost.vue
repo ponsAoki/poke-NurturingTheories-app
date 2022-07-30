@@ -384,13 +384,14 @@
                 ></v-textarea>
               </v-col>
 
-              <v-btn
-                type="submit"
-                class="mt-3"
-                color="primary"
-                :disabled="invalid"
-                >作成</v-btn
-              >
+              <v-conainer class="d-flex align-center">
+                <v-btn type="submit" color="primary" :disabled="invalid"
+                  >投稿</v-btn
+                >
+                <v-text class="ml-auto"
+                  >投稿者: {{ $store.state.user.user.name }}</v-text
+                >
+              </v-conainer>
             </v-form>
             <!-- </validation-observer> -->
           </v-card>
@@ -401,6 +402,7 @@
 </template>
 
 <script>
+import { store } from "../../../client-dev/src/store";
 import API from "../api";
 import Default from "../components/Default.vue";
 
@@ -474,6 +476,7 @@ export default {
     this.Items = itemsData.map((elm) => elm.name.japanese);
     const movesData = await API.getMove();
     this.Moves = movesData.map((elm) => elm.jname);
+    console.log(store.state.user.user.name);
   },
   mounted() {
     console.log(this.$vuetify.breakpoint);
@@ -516,7 +519,7 @@ export default {
       this.tetsuLink = true;
       const Pokemon = this.Pokemon;
       const num = Pokemon.no;
-      const url = this.url + `pokemon-species/${Pokemon.no}`;
+      const url = this.url + `pokemon-species/${num}`;
       fetch(url)
         .then((response) => {
           return response.json();
@@ -695,6 +698,7 @@ export default {
         formData.append("moves", []);
       }
       formData.append("memo", this.post.memo);
+      formData.append("username", store.state.user.user.name);
       if (this.$refs.form.validate()) {
         const response = await API.addPost(formData);
         this.$router.push({

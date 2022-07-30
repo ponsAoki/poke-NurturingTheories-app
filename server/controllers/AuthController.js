@@ -41,21 +41,21 @@ const login = async(req, res, next) => {
     //userNameが一致するレコードをDBから取得
     const user = await User.findOne({ name: userName })
         // console.log(user);
-        //userNameが見つからなかった場合
+
+    //userNameが見つからなかった場合
     if (!user) return res.status(401).json('ユーザー登録されていないようです')
+        // console.log(password);
+        // console.log(user.password);
 
-    // if (password == null) return res.status(404).json('passwrodがnullです')
-
-    // console.log(password);
-    // console.log(user.password);
     //入力されたパスワードとDBのパスワード比較
     const match = await bcrypt.compare(password, user.password)
-    console.log("ここまで行きました");
+        // console.log("ここまで行きました");
     if (!match) {
         console.log('パスワードが違います');
         return res.status(401).json('パスワードが違います')
     }
-    console.log("ここで止まってます");
+    // console.log("ここで止まってます");
+
     //パスワードが正しかった場合
     let token = jwt.sign({ name: user.name }, 'AzQ,PI)0(', { expiresIn: '1m' })
     let refreshToken = jwt.sign({ name: user.name }, 'refreshTokenSecret', { expiresIn: '48h' })

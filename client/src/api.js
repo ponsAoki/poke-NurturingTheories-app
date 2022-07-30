@@ -16,12 +16,9 @@ export default class API {
     //ユーザー登録
     static async register(query) {
         const res = await axios.post(registerUrl, query)
-            .catch(err => {
-                console.log('接続エラー', err);
-            })
         if (res) {
             store.dispatch('user/login', {
-                username: query.username,
+                username: query.name,
                 password: query.password
             }).then(() => {
                 router.push('/')

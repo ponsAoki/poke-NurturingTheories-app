@@ -7,7 +7,7 @@ export const user = {
     namespaced: true,
     state: {
         user: null,
-        users: "ユーザー図"
+        users: "ユーザーズ"
     },
     //mutations: commitでstateを更新したり、ブラウザ上のデブツールでstateの変化を追うことが可能
     mutations: {
@@ -35,6 +35,7 @@ export const user = {
                 response = await axios.get(userUrl)
                 console.log(response.data.user);
                 commit('setUser', response.data)
+                    //localStorageにトークンを保持している
                 commit('setToken', token)
                 return response
             } catch (err) {

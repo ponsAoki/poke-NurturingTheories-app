@@ -1,7 +1,7 @@
 <template>
   <v-card width="400px" class="mx-auto mt-10">
     <v-cad-title>
-      <h1 class="display-1">ユーザー登録</h1>
+      <h1 class="display-1">新規登録</h1>
     </v-cad-title>
     <v-card-text>
       <v-form @submit.prevent="register">
@@ -9,6 +9,7 @@
           v-model="name"
           prepend-icon="mdi-account-circle"
           label="ユーザ名"
+          :rules="rule1"
         />
         <v-text-field
           v-model="password"
@@ -16,7 +17,8 @@
           append-icon="mdi-eye-off"
           v-bind:type="showPassword ? 'text' : 'password'"
           @click:append="showPassword = !showPassword"
-          label="パスワード"
+          label="パスワード (特に指定はありません)"
+          :rules="rule1"
         />
         <v-card-actions>
           <v-btn type="submit" class="info">登録</v-btn>
@@ -44,7 +46,14 @@ export default {
     showPassword: false,
     name: "",
     password: "",
+    rule1: [(v) => !!v || "入力必須です"],
+    // rule2: [
+    //   (v) =>
+    //     (!!v && v != this.name) || "ユーザー名と異なるものを入力してください",
+    // ],
   }),
+
+  computed: {},
 
   methods: {
     async register() {
@@ -52,8 +61,13 @@ export default {
         name: this.name,
         password: this.password,
       });
-      console.log(res.message);
+      console.log(res);
     },
+    // rule2(v) {
+    //   return v != "" && v != this.name
+    //     ? true
+    //     : "ユーザー名と異なるものを入力してください";
+    // },
   },
 };
 </script>

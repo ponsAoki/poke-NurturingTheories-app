@@ -19,6 +19,7 @@ const postSchema = mongoose.Schema({
     rn: [Number],
     moves: Object,
     memo: String,
+    username: String,
     created: {
         type: Date,
         default: Date.now

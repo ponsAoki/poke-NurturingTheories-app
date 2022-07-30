@@ -64,6 +64,8 @@
                 実数値: {{ post.rn[0] }} - {{ post.rn[1] }} - {{ post.rn[2] }} -
                 {{ post.rn[3] }} - {{ post.rn[4] }} - {{ post.rn[5] }}
               </p>
+              <br />
+              <p>投稿者: {{ post.username }}</p>
               <!-- <p>{{ post.sex }}</p>
             <p>{{ post.color }}</p>
             <p>{{ post.no }}</p> -->
