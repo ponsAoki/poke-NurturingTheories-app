@@ -67,21 +67,29 @@ const router = new VueRouter({
 router.beforeEach(async(to, from, next) => {
     if (to.meta.requiresAuth) {
         console.log(store.state.user.user);
-        if (!store.state.user.user) {
-            next('login')
+        const storeUser = store.state.user
+        const token = localStorage.getItem('accessToken')
+
+        if (token) {
+            // console.log("ここまで来てるよ");
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+                // console.log("ここまで来てるよ");
+            let res = await axios.get(userUrl)
+                .catch(err => {
+                    console.log(err);
+                    next('login')
+                })
+                // console.log(res ? "resあるよ" : "res空だよ");
+                // console.log("ここまで来てるよ");
+            console.log(res);
+            if (!storeUser.user) {
+                router.push('login')
+            } else {
+                next()
+            }
         } else {
-            next()
+            console.log("tokenないよ");
         }
-        // try {
-        //     const res = await axios.get(userUrl)
-        //     if (res.status == 200) {
-        //         console.log(res.data.message);
-        //         next()
-        //     }
-        // } catch (error) {
-        //     console.log("例外", error);
-        //     next('login')
-        // }
     } else {
         console.log(to.meta.requiresAuth);
         next()

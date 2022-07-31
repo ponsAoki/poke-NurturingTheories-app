@@ -10,8 +10,9 @@ const authenticate = (req, res, next) => {
         return res.status(401).json("アクセストークンが含まれていません。");
 
     jwt.verify(token, 'AzQ,PI)0(', (err, user) => {
-        if (err)
-            return res.status(402).json("アクセストークンが有効ではありません。");
+        if (err) {
+            return res.status(402).json({ message: "アクセストークンが有効ではありません。", error: err });
+        }
         console.log(user);
         req.user = user;
         next();
