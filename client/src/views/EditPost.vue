@@ -397,6 +397,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import API from "../api";
 import Default from "../components/Default.vue";
 
@@ -493,10 +494,10 @@ export default {
       console.log(this.Pokemon);
       this.imgSrc();
       for (let i = 0; i < 2; i++) {
-        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
-          this.post.abilities.push(this.Pokemon.abilities[i]);
-          this.post.abilities.push(this.Pokemon.hidden_abilities[i]);
-        }
+        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i])
+          this.post.abilities[i] = this.Pokemon.abilities[i];
+        this.post.abilities[this.Pokemon.abilities.length] =
+          this.Pokemon.hidden_abilities[0];
       }
       this.post.ability = this.post.abilities[0];
       this.post.bn[0] = this.Pokemon.status.h;
@@ -534,33 +535,30 @@ export default {
         });
     },
     //画像の処理云々
-    imgSrc() {
+    async imgSrc() {
       const Pokemon = this.Pokemon;
       const url = this.url + `pokemon-species/${Pokemon.no}`;
-      fetch(url)
-        .then(async (response) => {
-          return response.json();
-        })
-        .then(async (pokemon) => {
-          for (let i = 0; i < pokemon.names.length; i++) {
-            await this.simPokeByNum(Pokemon).then((response) => {
-              console.log(response);
-              if (response[i]._id == Pokemon._id) {
-                console.log(i);
-                this.tetsuLinkOn(i);
-                this.post.simId = i;
-                fetch(pokemon.varieties[i].pokemon.url)
-                  .then(async (res) => {
-                    return res.json();
-                  })
-                  .then((formI) => {
-                    this.imgJadge(formI);
-                    return this.simId;
-                  });
+      const pokemon = await axios.get(url);
+      if (pokemon) {
+        for (let i = 0; i < pokemon.data.names.length; i++) {
+          const response = await this.simPokeByNum(Pokemon);
+          if (response) {
+            console.log(response);
+            if (response[i]._id == Pokemon._id) {
+              console.log(i);
+              this.tetsuLinkOn(i);
+              this.post.simId = i;
+              const formI = await axios.get(
+                pokemon.data.varieties[i].pokemon.url
+              );
+              if (formI) {
+                this.imgJadge(formI);
+                return this.simId;
               }
-            });
+            }
           }
-        });
+        }
+      }
     },
     async simPokeByNum(p) {
       const res = await API.getPokeByNum(p);

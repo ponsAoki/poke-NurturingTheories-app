@@ -385,9 +385,7 @@
               </v-col>
 
               <v-conainer class="d-flex align-center">
-                <v-btn type="submit" color="primary" :disabled="invalid"
-                  >投稿</v-btn
-                >
+                <v-btn type="submit" color="primary">投稿</v-btn>
                 <v-text class="ml-auto"
                   >投稿者: {{ $store.state.user.user.name }}</v-text
                 >
@@ -402,6 +400,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { store } from "../../../client-dev/src/store";
 import API from "../api";
 import Default from "../components/Default.vue";
@@ -476,7 +475,6 @@ export default {
     this.Items = itemsData.map((elm) => elm.name.japanese);
     const movesData = await API.getMove();
     this.Moves = movesData.map((elm) => elm.jname);
-    console.log(store.state.user.user.name);
   },
   mounted() {
     console.log(this.$vuetify.breakpoint);
@@ -491,14 +489,11 @@ export default {
         return true;
       }
     },
-    onInput() {
+    onInput: function () {
       console.log(this.Pokemon);
-      if (this.post.c_switch === null) {
-        this.imgSrc();
-      } else {
-        this.imgSrc();
-        this.imgSrc();
-      }
+      this.imgSrc();
+      console.log("ここまで実行されてるよ");
+
       for (let i = 0; i < 2; i++) {
         if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
           this.abilities.push(this.Pokemon.abilities[i]);
@@ -541,31 +536,30 @@ export default {
           }
         });
     },
-    imgSrc() {
+    async imgSrc() {
       const Pokemon = this.Pokemon;
+      console.log(Pokemon._id);
       const url = this.url + `pokemon-species/${Pokemon.no}`;
-      fetch(url)
-        .then((response) => {
-          return response.json();
-        })
-        .then((pokemon) => {
-          for (let i = 0; i < pokemon.names.length; i++) {
-            this.simPokeByNum(Pokemon).then((response) => {
-              if (response[i]._id == Pokemon._id) {
-                this.tetsuLinkOn(i);
-                this.post.simPokesId = i;
-                fetch(pokemon.varieties[i].pokemon.url)
-                  .then((res) => {
-                    return res.json();
-                  })
-                  .then((formI) => {
-                    this.imgJadge(formI);
-                    return this.simPokesId;
-                  });
+      const pokemon = await axios.get(url);
+      if (pokemon) {
+        for (let i = 0; i < pokemon.data.names.length; i++) {
+          const response = await this.simPokeByNum(Pokemon);
+          if (response) {
+            console.log(response[i]._id);
+            if (response[i]._id == Pokemon._id) {
+              this.tetsuLinkOn(i);
+              this.post.simPokesId = i;
+              const formI = await axios.get(
+                pokemon.data.varieties[i].pokemon.url
+              );
+              if (formI) {
+                this.imgJadge(formI.data);
+                return this.simPokesId;
               }
-            });
+            }
           }
-        });
+        }
+      }
     },
     async simPokeByNum(p) {
       const res = await API.getPokeByNum(p);
@@ -710,9 +704,9 @@ export default {
     },
   },
   watch: {
-    // Pokemon() {
-    //   this.imgSrc();
-    // },
+    Pokemon() {
+      this.imgSrc();
+    },
     level() {
       this.nhCal();
       this.nOCal();

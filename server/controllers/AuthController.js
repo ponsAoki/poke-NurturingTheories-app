@@ -57,7 +57,7 @@ const login = async(req, res, next) => {
     // console.log("ここで止まってます");
 
     //パスワードが正しかった場合
-    let token = jwt.sign({ name: user.name }, 'AzQ,PI)0(', { expiresIn: '1m' })
+    let token = jwt.sign({ name: user.name }, 'AzQ,PI)0(', { expiresIn: '1h' })
     let refreshToken = jwt.sign({ name: user.name }, 'refreshTokenSecret', { expiresIn: '48h' })
     return res.status(200).json({
         message: 'ログイン完了!',

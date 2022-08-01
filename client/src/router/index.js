@@ -77,6 +77,7 @@ router.beforeEach(async(to, from, next) => {
             let res = await axios.get(userUrl)
                 .catch(err => {
                     console.log(err);
+                    axios.defaults.headers.common['Authorization'] = null
                     next('login')
                 })
                 // console.log(res ? "resあるよ" : "res空だよ");
