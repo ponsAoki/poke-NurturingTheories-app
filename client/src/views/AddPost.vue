@@ -93,7 +93,8 @@
                   <v-select
                     label="特性"
                     v-model="post.Ability"
-                    :items="abilities"
+                    :items="post.abilities"
+                    :item-value="post.Ability"
                   ></v-select>
                 </v-col>
                 <v-col>
@@ -423,6 +424,7 @@ export default {
         sex_i: 0,
         c_switch: "",
         image: "",
+        abilities: [],
         Ability: "",
         Nature: "",
         Item: "",
@@ -436,7 +438,6 @@ export default {
       url: `https://pokeapi.co/api/v2/`,
       images: [],
       lvs: [50, 100],
-      abilities: [],
       loading: false,
       Items: [],
       natures: [
@@ -494,13 +495,24 @@ export default {
       this.imgSrc();
       console.log("ここまで実行されてるよ");
 
-      for (let i = 0; i < 2; i++) {
-        if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i]) {
-          this.abilities.push(this.Pokemon.abilities[i]);
-          this.abilities.push(this.Pokemon.hidden_abilities[i]);
+      if (this.post.abilities == "") {
+        for (let i = 0; i < 2; i++) {
+          if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i])
+            this.post.abilities.push(this.Pokemon.abilities[i]);
         }
+        this.post.abilities.push(this.Pokemon.hidden_abilities[0]);
+      } else {
+        for (let i = 0; i < 2; i++) {
+          if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i])
+            this.post.abilities[i] = this.Pokemon.abilities[i];
+        }
+        console.log(this.post.abilities);
+        this.post.abilities[this.Pokemon.abilities.length] =
+          this.Pokemon.hidden_abilities[0];
+        console.log("ここまで来てます");
       }
-      this.post.Ability = this.abilities[0];
+
+      this.post.Ability = this.post.abilities[0];
       this.post.bn[0] = this.Pokemon.status.h;
       this.post.bn[1] = this.Pokemon.status.a;
       this.post.bn[2] = this.Pokemon.status.b;
@@ -566,11 +578,10 @@ export default {
       return await res;
     },
     imgJadge(pokemon) {
-      if (this.post.image === "") {
-        this.post.image = pokemon.sprites.front_default;
-      } else if (this.post.c_switch === "rare") {
+      console.log(pokemon);
+      if (this.post.c_switch === "rare") {
         this.post.image = pokemon.sprites.front_shiny;
-      } else if (this.post.c_switch === null) {
+      } else if (this.post.c_switch === null || this.post.c_switch === "") {
         this.post.image = pokemon.sprites.front_default;
       }
     },
@@ -643,8 +654,8 @@ export default {
       formData.append("sex", this.post.sex_i);
       formData.append("color", this.post.c_switch);
       formData.append("ability", this.post.Ability);
-      if (this.abilities.length > 0) {
-        this.abilities.forEach((elm, index) => {
+      if (this.post.abilities.length > 0) {
+        this.post.abilities.forEach((elm, index) => {
           formData.append("abilities[" + index + "]", elm);
         });
       } else {
@@ -705,7 +716,7 @@ export default {
   },
   watch: {
     Pokemon() {
-      this.imgSrc();
+      // this.imgSrc();
     },
     level() {
       this.nhCal();

@@ -477,6 +477,7 @@ export default {
     console.log(this.$vuetify.breakpoint);
     this.nhCal();
     this.nOCal();
+    const copy = this.post;
   },
   // computed() {
   //   console.log(this.post);
@@ -496,9 +497,9 @@ export default {
       for (let i = 0; i < 2; i++) {
         if (this.Pokemon.abilities[i] || this.Pokemon.hidden_abilities[i])
           this.post.abilities[i] = this.Pokemon.abilities[i];
-        this.post.abilities[this.Pokemon.abilities.length] =
-          this.Pokemon.hidden_abilities[0];
       }
+      this.post.abilities[this.Pokemon.abilities.length] =
+        this.Pokemon.hidden_abilities[0];
       this.post.ability = this.post.abilities[0];
       this.post.bn[0] = this.Pokemon.status.h;
       this.post.bn[1] = this.Pokemon.status.a;
@@ -552,6 +553,7 @@ export default {
                 pokemon.data.varieties[i].pokemon.url
               );
               if (formI) {
+                console.log(formI);
                 this.imgJadge(formI);
                 return this.simId;
               }
@@ -565,12 +567,13 @@ export default {
       return await res;
     },
     imgJadge(pokemon) {
-      if (this.post.image === "") {
-        this.post.image = pokemon.sprites.front_default;
-      } else if (this.post.color === "rare") {
-        this.post.image = pokemon.sprites.front_shiny;
-      } else if (this.post.color === "false" || this.post.color === null) {
-        this.post.image = pokemon.sprites.front_default;
+      console.log(pokemon.data);
+      // if (this.post.image === "" || ) {
+      //   this.post.image = pokemon.data.sprites.front_default;
+      if (this.post.color === "rare") {
+        this.post.image = pokemon.data.sprites.front_shiny;
+      } else if (this.post.color === null || this.post.color === "") {
+        this.post.image = pokemon.data.sprites.front_default;
       }
     },
     natureInArray() {
@@ -708,7 +711,9 @@ export default {
   },
   watch: {
     Pokemon() {
-      this.imgSrc();
+      // this.imgSrc();
+      this.nhCal();
+      this.nOCal();
     },
     level() {
       this.nhCal();
