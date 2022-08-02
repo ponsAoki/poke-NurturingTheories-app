@@ -471,13 +471,12 @@ export default {
     const movesData = await API.getMove();
     this.Moves = movesData.map((elm) => elm.jname);
     this.Pokemon = await API.getPokeById(this.$route.params.id);
-    this.natureInArray();
+    this.natureOperation();
   },
   mounted() {
     console.log(this.$vuetify.breakpoint);
     this.nhCal();
     this.nOCal();
-    const copy = this.post;
   },
   // computed() {
   //   console.log(this.post);
@@ -489,6 +488,15 @@ export default {
       } else {
         return true;
       }
+    },
+    natureOperation() {
+      // const arr = Object.entries(this.natures);
+      const result = this.natures.filter((obj) => {
+        return obj.name === this.post.nature;
+      });
+      console.log(result);
+      this.post.nature = result[0];
+      // return result;
     },
     onInput: function () {
       console.log(this.post.no);
@@ -568,26 +576,16 @@ export default {
     },
     imgJadge(pokemon) {
       console.log(pokemon.data);
-      // if (this.post.image === "" || ) {
-      //   this.post.image = pokemon.data.sprites.front_default;
       if (this.post.color === "rare") {
         this.post.image = pokemon.data.sprites.front_shiny;
       } else if (this.post.color === null || this.post.color === "") {
         this.post.image = pokemon.data.sprites.front_default;
       }
     },
-    natureInArray() {
-      this.natureOperation();
-      return this.post.nature;
-    },
-    natureOperation() {
-      const arr = Object.entries(this.natures);
-      console.log(arr);
-      const result = arr.filter(([n, value]) => {
-        return value.name === this.post.nature;
-      });
-      this.post.nature = result[0][1];
-    },
+    // natureInArray() {
+    //   this.natureOperation();
+    //   return this.post.nature;
+    // },
     nhCal() {
       if (this.Pokemon.name !== "ヌケニン") {
         this.post.rn[0] =
@@ -712,8 +710,8 @@ export default {
   watch: {
     Pokemon() {
       // this.imgSrc();
-      this.nhCal();
-      this.nOCal();
+      // this.nhCal();
+      // this.nOCal();
     },
     level() {
       this.nhCal();

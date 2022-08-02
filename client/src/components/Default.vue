@@ -4,9 +4,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title> ポケモン my育成論工房 </v-list-item-title>
-          <v-list-item-subtitle>
-            メニュー {{ $store.state.users }}</v-list-item-subtitle
-          >
+          <v-list-item-subtitle> メニュー</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
@@ -30,20 +28,39 @@
       <v-toolbar-title
         >ポケモン my育成論工房{{ $store.state.user.user }}</v-toolbar-title
       >
+      <!-- <v-btn color="error" @click="logout">ログアウト</v-btn> -->
     </v-app-bar>
   </div>
 </template>
 
 <script>
+import router from "../../../client/src/router";
+import { store } from "../store";
 // import Default from "./views/Default.vue";
 export default {
   data: () => ({
     drawer: null,
     items: [
       { title: "育成論一覧", icon: "mdi-home", link: "/" },
-      { title: "新しい育成論", icon: "mdi-note-plus", link: "/add-pokemon" },
-      { title: "About", icon: "mdi-help-box", link: "/about" },
+      {
+        title: "育成論を投稿",
+        icon: "mdi-note-plus",
+        link: "/add-pokemon",
+      },
+      // { title: "About", icon: "mdi-help-box", link: "/about" },
     ],
   }),
+
+  async created() {
+    // console.log(store.state.);
+  },
+
+  methods: {
+    // logout() {
+    //   store.dispatch("user/logout").then(() => {
+    //     router.push("login");
+    //   });
+    // },
+  },
 };
 </script>
