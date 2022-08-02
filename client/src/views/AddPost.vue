@@ -426,7 +426,10 @@ export default {
         image: "",
         abilities: [],
         Ability: "",
-        Nature: "",
+        Nature: {
+          name: "さみしがり" + "  " + "(A↑B↓)",
+          n: ["", 1.1, 0.9, "", "", ""],
+        },
         Item: "",
         moves: [],
         bn: [100, 100, 100, 100, 100, 100],
