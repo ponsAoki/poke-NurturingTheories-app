@@ -15,7 +15,7 @@
       <v-row no-gutters>
         <v-col sm="4" class="pa-3" v-for="post in posts" :key="post.id">
           <v-card class="pa-1" :to="{ name: 'post', params: { id: post._id } }">
-            <v-row>
+            <v-row no-gutters>
               <v-col>
                 <v-img max-width="120" :src="post.image"></v-img>
                 <v-btn class="ml-4 mt-3" small outlined color="indigo">
@@ -52,24 +52,7 @@
               </v-row>
               <br />
               <p>@{{ post.item ? `${post.item}` : "持ち物なし" }}</p>
-              <p>
-                努力値: {{ post.en[0] }} - {{ post.en[1] }} - {{ post.en[2] }} -
-                {{ post.en[3] }} - {{ post.en[4] }} - {{ post.en[5] }}
-              </p>
-              <p>
-                個体値: {{ post.IN[0] }} - {{ post.IN[1] }} - {{ post.IN[2] }} -
-                {{ post.IN[3] }} - {{ post.IN[4] }} - {{ post.IN[5] }}
-              </p>
-              <p>
-                実数値: {{ post.rn[0] }} - {{ post.rn[1] }} - {{ post.rn[2] }} -
-                {{ post.rn[3] }} - {{ post.rn[4] }} - {{ post.rn[5] }}
-              </p>
               <br />
-              <!-- <p>あなた: {{ $store.state.user.user.name }}</p> -->
-              <!-- <p>{{ post.sex }}</p>
-            <p>{{ post.color }}</p>
-            <p>{{ post.no }}</p> -->
-              <!-- <div class="d-flex justify-space-between"> -->
               <div class="d-flex justify-space-between align-center mr-0">
                 <div class="align-center">投稿者: {{ post.username }}</div>
                 <div v-if="post.username == $store.state.user.user.name">
@@ -84,7 +67,6 @@
                   >
                 </div>
               </div>
-              <!-- </div> -->
             </v-card-text>
           </v-card>
         </v-col>

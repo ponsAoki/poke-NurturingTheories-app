@@ -3,8 +3,8 @@
     <Default></Default>
     <v-container>
       <v-row no-gutters>
-        <v-col sm="10" class="mx-auto">
-          <v-card class="pa-5">
+        <v-col sm="10" class="mx-auto d-flex justify-center">
+          <v-card class="pa-5" max-width="600">
             <v-card-title>新しい育成論</v-card-title>
             <v-divider></v-divider>
             <!-- <validation-observer ref="observer" v-slot="{ invalid }"> -->
@@ -15,7 +15,7 @@
               enctype="multipart/form-data"
             >
               <v-row>
-                <v-col cols="12" sm="6">
+                <v-col>
                   <v-autocomplete
                     class="font-medium shadow relative"
                     v-model="Pokemon"
@@ -28,7 +28,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col cols="12" sm="3" class="ml-10">
+                <v-col cols="3">
                   <v-select
                     label="Lv."
                     :items="lvs"
@@ -53,9 +53,9 @@
                     v-model="post.nn"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="1"></v-col>
-                <v-col class="ml-10 h-100">
-                  <img :src="post.image" />
+                <!-- <v-col cols="1"></v-col> -->
+                <v-col class="py-0 d-flex justify-center">
+                  <img :src="post.image" width="120" />
                 </v-col>
               </v-row>
 

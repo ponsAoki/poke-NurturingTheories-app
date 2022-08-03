@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" app>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title> ポケモン my育成論工房 </v-list-item-title>
+          <v-list-item-title> ぽミュニティ </v-list-item-title>
           <v-list-item-subtitle> メニュー</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -26,7 +26,9 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title
-        >ポケモン my育成論工房{{ $store.state.user.user }}</v-toolbar-title
+        >ぽミュニティ ～ポケモン育成論コミュニティ～{{
+          $store.state.user.user
+        }}</v-toolbar-title
       >
       <!-- <v-btn color="error" @click="logout">ログアウト</v-btn> -->
     </v-app-bar>
@@ -41,7 +43,7 @@ export default {
   data: () => ({
     drawer: null,
     items: [
-      { title: "育成論一覧", icon: "mdi-home", link: "/" },
+      { title: "投稿一覧", icon: "mdi-home", link: "/" },
       {
         title: "育成論を投稿",
         icon: "mdi-note-plus",
