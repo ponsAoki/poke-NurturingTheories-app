@@ -3,34 +3,46 @@
     <Default></Default>
     <v-container>
       <v-row no-gutters>
-        <v-col sm="10" class="pa-4 mx-auto">
-          <v-card class="pa-10 ma-10">
-            <div class="d-flex justify-space-around">
-              <!-- <v-col> -->
-              <v-img max-width="180" max-height="200" :src="post.image"></v-img>
-              <!-- </v-col> -->
-              <div class="mt-5">
-                <div>
-                  <v-btn outlined color="primary">{{ post.pokemon[2] }}</v-btn>
-                </div>
-                <br />
-                <div class="d-flex">
-                  <div class="mr-5">{{ post.ability }}</div>
-                  <div>{{ post.nature }}</div>
-                </div>
-                <br />
-                <div>@{{ post.item }}</div>
-                <br />
-                <div>
-                  <p>
-                    個体値: {{ post.IN[0] }} - {{ post.IN[1] }} -
-                    {{ post.IN[2] }} - {{ post.IN[3] }} - {{ post.IN[4] }} -
-                    {{ post.IN[5] }}
-                  </p>
+        <v-col sm="10" class="pa-4 mx-auto d-flex justify-center">
+          <v-card class="pa-10 ma-10" max-width="600">
+            <v-row no-gutters class="d-flex align-center">
+              <v-col>
+                <v-img max-width="120" :src="post.image"></v-img>
+                <v-btn class="ml-4 mt-3" small outlined color="indigo">
+                  {{ post.pokemon[2] }}
+                </v-btn>
+              </v-col>
+              <v-col max-width="300" class="mt-10">
+                <v-textarea
+                  v-model="post.memo"
+                  label="投稿者のメモ"
+                  outlined
+                  type="text"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+            <v-card-title>
+              {{ post.nn }}
+            </v-card-title>
+
+            <v-card-text class="py-0">
+              <div class="d-flex">
+                <div class="mr-16">
+                  <div class="d-flex">
+                    <div class="mr-5">{{ post.ability }}</div>
+                    <div>{{ post.nature }}</div>
+                  </div>
+                  <br />
+                  <p>@{{ post.item ? `${post.item}` : "持ち物なし" }}</p>
                   <p>
                     努力値: {{ post.en[0] }} - {{ post.en[1] }} -
                     {{ post.en[2] }} - {{ post.en[3] }} - {{ post.en[4] }} -
                     {{ post.en[5] }}
+                  </p>
+                  <p>
+                    個体値: {{ post.IN[0] }} - {{ post.IN[1] }} -
+                    {{ post.IN[2] }} - {{ post.IN[3] }} - {{ post.IN[4] }} -
+                    {{ post.IN[5] }}
                   </p>
                   <p>
                     実数値: {{ post.rn[0] }} - {{ post.rn[1] }} -
@@ -39,59 +51,52 @@
                   </p>
                 </div>
                 <div>
-                  <v-btn class="ma-1" width="160px">{{ post.moves[0] }}</v-btn>
-                  <v-btn class="ma-1" width="160px">{{ post.moves[2] }}</v-btn>
-                </div>
-                <div>
-                  <v-btn class="ma-1" width="160px">{{ post.moves[1] }}</v-btn>
-                  <v-btn class="ma-1" width="160px">{{ post.moves[3] }}</v-btn>
+                  <!-- <div> -->
+                  <div>
+                    <v-btn class="ma-1" style="width: 150px">{{
+                      post.moves[0]
+                    }}</v-btn>
+                  </div>
+                  <div>
+                    <v-btn class="ma-1" style="width: 150px">{{
+                      post.moves[2]
+                    }}</v-btn>
+                  </div>
+                  <div>
+                    <v-btn class="ma-1" style="width: 150px">{{
+                      post.moves[1]
+                    }}</v-btn>
+                  </div>
+                  <div>
+                    <v-btn class="ma-1" style="width: 150px">{{
+                      post.moves[3]
+                    }}</v-btn>
+                  </div>
+                  <!-- </div> -->
                 </div>
               </div>
-            </div>
-            <v-card-actions class="pb-0">
-              <v-row class="mt-1 mx-1">
-                <v-col sm="2"> </v-col>
-              </v-row>
-            </v-card-actions>
-            <v-card-subtitle class="headline">
-              <h3>{{ post.nn }}</h3>
-            </v-card-subtitle>
-            <v-card-text>
-              <v-row>
-                <!-- <v-col>{{ post.ability }}</v-col>
-                <v-col>{{ post.nature }}</v-col> -->
-              </v-row>
               <br />
-
-              <!-- <div>
-                <v-btn class="ma-1" width="160px">{{ post.moves[0] }}</v-btn>
-                <v-btn class="ma-1" width="160px">{{ post.moves[2] }}</v-btn>
+              <!-- <p>あなた: {{ $store.state.user.user.name }}</p> -->
+              <!-- <p>{{ post.sex }}</p>
+            <p>{{ post.color }}</p>
+            <p>{{ post.no }}</p> -->
+              <!-- <div class="d-flex justify-space-between"> -->
+              <div class="d-flex justify-space-between align-center mr-0">
+                <div class="align-center">投稿者: {{ post.username }}</div>
+                <div v-if="post.username == $store.state.user.user.name">
+                  <v-btn
+                    color="success"
+                    text
+                    :to="{ name: 'edit-post', params: { id: post._id } }"
+                    >編集</v-btn
+                  >
+                  <v-btn color="red" text @click="removePost(post._id)"
+                    >削除</v-btn
+                  >
+                </div>
               </div>
-              <div>
-                <v-btn class="ma-1" width="160px">{{ post.moves[1] }}</v-btn>
-                <v-btn class="ma-1" width="160px">{{ post.moves[3] }}</v-btn>
-              </div> -->
+              <!-- </div> -->
             </v-card-text>
-            <div
-              class="d-flex justify-space-between align-center mr-0"
-              v-if="post.username == $store.state.user.user.name"
-            >
-              <div class="align-center">投稿者: {{ post.username }}</div>
-              <div
-                v-if="post.username == $store.state.user.user.name"
-                class="d-flex justify-space-between"
-              >
-                <v-btn
-                  color="success"
-                  text
-                  :to="{ name: 'edit-post', params: { id: post._id } }"
-                  >編集</v-btn
-                >
-                <v-btn color="red" text @click="removePost(post._id)"
-                  >削除</v-btn
-                >
-              </div>
-            </div>
           </v-card>
         </v-col>
       </v-row>
